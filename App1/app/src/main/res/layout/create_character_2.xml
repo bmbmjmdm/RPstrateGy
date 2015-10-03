@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mainbackground"
+    android:padding="20dp">>
+<RelativeLayout
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/relativelayoutC">
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="20"
+        android:id="@+id/cpLeft"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="50sp"
+        android:paddingLeft="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Health"
+        android:id="@+id/healthText"
+        android:textColor="#E42217"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:textSize="30sp"
+        android:layout_toLeftOf="@+id/cpLeft"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="62dp"
+        android:layout_marginRight="-20dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/healthM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/cpLeft"
+        android:layout_toRightOf="@+id/cpLeft"
+        android:onClick="dechealth"
+        android:layout_marginLeft="-23dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/healthN"
+        android:textSize="30sp"
+        android:layout_toRightOf="@+id/healthM"
+        android:textColor="#000000"
+        android:layout_alignBottom="@+id/healthText" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/healthP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/healthM"
+        android:layout_toRightOf="@+id/healthN"
+        android:onClick="inchealth" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Stamina"
+        android:id="@+id/staminaText"
+        android:textColor="#41A317"
+        android:textSize="30sp"
+        android:layout_below="@+id/healthText"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignRight="@+id/healthText" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/staminaM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/healthM"
+        android:layout_marginTop="10dp"
+        android:onClick="decstamina"
+        android:layout_alignLeft="@+id/healthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/staminaN"
+        android:layout_toRightOf="@+id/staminaM"
+        android:layout_alignBottom="@+id/staminaText"
+        android:textSize="30sp"
+        android:textColor="#000000" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/staminaP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/staminaM"
+        android:layout_toRightOf="@+id/staminaN"
+        android:onClick="incstamina" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Mana"
+        android:id="@+id/manaText"
+        android:textColor="#993399"
+        android:textSize="30sp"
+        android:layout_below="@+id/staminaText"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignRight="@+id/healthText" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/manaM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/staminaM"
+        android:layout_toEndOf="@+id/cpLeft"
+        android:layout_toRightOf="@+id/cpLeft"
+        android:layout_marginTop="10dp"
+        android:onClick="decmana"
+        android:layout_alignLeft="@+id/healthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/manaN"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:layout_alignBottom="@+id/manaText"
+        android:layout_toRightOf="@+id/manaM" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/manaP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_toRightOf="@+id/manaN"
+        android:layout_alignBottom="@+id/manaM"
+        android:onClick="incmana" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Focus"
+        android:id="@+id/focusText"
+        android:textColor="#0000CC"
+        android:textSize="30sp"
+        android:layout_below="@+id/manaText"
+        android:layout_alignRight="@+id/staminaText"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/focusM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/focusText"
+        android:layout_marginTop="10dp"
+        android:onClick="decfocus"
+        android:layout_alignLeft="@+id/healthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/focusN"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:layout_toRightOf="@+id/focusM"
+        android:layout_alignBottom="@+id/focusText" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/focusP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/focusM"
+        android:layout_toRightOf="@+id/focusN"
+        android:onClick="incfocus" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/focusText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:id="@+id/charPerkOptions"></LinearLayout>
+
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Done"
+        android:id="@+id/finChar"
+        android:layout_below="@+id/charPerkOptions"
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:onClick="doneChar"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:textColor="@drawable/white_text_button"
+        android:background="@drawable/brush2_button"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>
+    </ScrollView>

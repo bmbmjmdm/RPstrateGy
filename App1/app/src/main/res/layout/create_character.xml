@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent"
+        android:onClick="takeFoc"
+        android:background="@drawable/mainbackground"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New  Character"
+            android:id="@+id/newcharTitle"
+            android:layout_gravity="center_horizontal"
+            android:textSize="35sp"
+            android:textColor="#ff000000"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:onClick="newCharInfo"
+            android:layout_alignParentTop="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/inName"
+            android:width="240dp"
+            android:hint="Enter name here"
+            android:inputType="textNoSuggestions|textCapWords|text"
+            android:singleLine="true"
+            android:longClickable="false"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:imeOptions="actionDone"
+            android:textSize="25sp"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="40dp"
+            android:text="Done"
+            android:id="@+id/charNext"
+            android:onClick="doneChar"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush2_button"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:id="@+id/takeFoc"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_height="0px"
+            android:layout_width="0px"/>
+
+        </LinearLayout>
+

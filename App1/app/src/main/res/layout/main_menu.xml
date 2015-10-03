@@ -1,0 +1,100 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mainbackground">>
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:clickable="true" android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RPstrateGy"
+        android:id="@+id/mainTitle"
+        android:layout_gravity="center_horizontal"
+        android:textSize="40sp"
+        android:textColor="#ff000000"
+        android:clickable="true"
+        android:onClick="mainInfo"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="85dp"
+        android:text="Play  Online      "
+        android:id="@+id/onlineBut"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/brush1_button"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:textColor="@drawable/white_text_button" />
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="85dp"
+        android:text="Play  Offline"
+        android:id="@+id/offlineBut"
+        android:layout_marginTop="30dp"
+        android:width="250dp"
+        android:onClick="offlineMenu"
+        android:layout_gravity="center_horizontal"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:background="@drawable/brush1flip_button"
+        android:textColor="@drawable/white_text_button" />
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="85dp"
+        android:text="Customize      "
+        android:id="@+id/customizeBut"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:width="250dp"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:background="@drawable/brush1_button"
+        android:textColor="@drawable/white_text_button"
+        android:singleLine="false"
+        android:nestedScrollingEnabled="false"
+        android:onClick="customizeMenu" />
+
+    <Button
+        android:layout_width="400dp"
+        android:layout_height="85dp"
+        android:text="Options"
+        android:id="@+id/optionsBut"
+        android:width="250dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:background="@drawable/brush1flip_button"
+        android:textColor="@drawable/white_text_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Character"
+        android:id="@+id/deleteBut"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:width="250dp"
+        android:background="@drawable/delete_button"
+        android:clickable="true"
+        android:onClick="deleteChar" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete External Data"
+        android:id="@+id/button2"
+        android:width="250dp"
+        android:background="@drawable/delete_button"
+        android:clickable="true"
+        android:onClick="deleteStorage"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp" />
+</LinearLayout>
+</ScrollView>

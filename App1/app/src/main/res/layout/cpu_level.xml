@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/mainbackground"
+    android:id="@+id/cpuTop">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/levelTitle"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="40sp"
+        android:clickable="true"
+        android:onClick="levelInfo"
+        android:textColor="#ff000000" />
+
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:textSize="30sp"
+        android:layout_marginTop="100dp"
+        android:text="New Game    "
+        android:id="@+id/newLevel"
+        android:background="@drawable/brush2flip_button"
+        android:textColor="@drawable/white_text_button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="newLevel"/>
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:textSize="30sp"
+        android:text="  Continue"
+        android:id="@+id/continueLevel"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/brush2_button"
+        android:textColor="@drawable/white_text_button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="continueLevel" />
+</LinearLayout>

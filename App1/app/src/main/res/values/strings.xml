@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RPstrateGy</string>
+    <string name="create_character">+ Create New</string>
+
+    <string name="actionsGuide">Actions are what your character chooses to do during each turn of combat.</string>
+    <string name="actionsGuide2">You have to buy actions before you can use them, but once you buy them, you have them forever!</string>
+
+    <string name="buyActionsGuide">Click on an action\'s name for information about it. Click on an action\'s lock to unlock/relock it.</string>
+    <string name="buyActionsGuide2">As you level up your classes, you\'ll gain access to more and more actions. If you don\'t see any actions on this page, that means there are no new ones to buy.</string>
+    <string name="buyActionsGuide3">All actions have requirements, including a cost in Skill Points. If you meet all the requirements for an action (not including the cost), it will appear on this page.</string>
+    <string name="buyActionsGuide4">Be sure to save at the bottom when you\'re done!</string>
+
+
+    <string name="viewActionsGuide">Here you can view actions as they will appear in-game!</string>
+
+    <string name="classGuide">Distribute skill points among various classes to unlock actions, items, perks, and increase their general effectiveness!</string>
+    <string name="classGuide2">Click a class\'s name for more information about it.</string>
+    <string name="classGuide3">The early levels of a class will unlock their basics, so branching out is very useful even if you only invest a little.</string>
+    <string name="classGuide4">Every X levels in a class will unlock a new action (items and perks are unlocked sporadically). The level cap is 100.</string>
+    <string name="classGuide5">Be sure to save at the bottom when you\'re done!</string>
+
+    <string name="customizeGuide2">You\'ll earn skill points after each battle, and even more if you win!</string>
+    <string name="customizeGuide">Spend skill points on various skills such as classes, items, perks, and stats.</string>
+
+    <string name="newCharGuide">Once you create your character, you\'ll be given 100 Skill Points to use on them in the Customize menu.</string>
+    <string name="newCharGuide2">To switch who your current character is, use the menu in the top right. This menu is not available while creating a new character.</string>
+
+    <string name="offlineGuide2">Click on the left to play against the computer 1 on 1 or in a number of simulated scenarios.</string>
+    <string name="offlineGuide">Click on the right to play with a friend 1 on 1 on this device. You will both choose from your existing characters.</string>
+
+    <string name="friendlyGuide">This is a list of all games the current character started. Click on one to continue it, or if there aren\'t any, start a new one!</string>
+
+    <string name="perksGuide">Perks help make your character stronger by giving them special abilities or improving upon the abilities they already have!</string>
+    <string name="perksGuide2">You have to buy a perk before you can use it. After you buy one, it will become active, and you can deactivate/reactivate it at any time (except in battle).</string>
+
+    <string name="activatePerksGuide">Click on a perk\'s name for information about it. Click on a perk\'s checkbox to activate/deactivate it.</string>
+    <string name="activatePerksGuide2">You can have as many perks active at once as you want!</string>
+    <string name="activatePerksGuide3">Be sure to save when you\'re done.</string>
+
+
+    <string name="buyPerksGuide">Click on a perk\'s name for information about it. Click on a perk\'s lock to unlock/relock it.</string>
+    <string name="buyPerksGuide2">As you level up your classes, you\'ll gain access to more and more perks. If you don\'t see any perks on this page, that means there are no new ones to buy.</string>
+    <string name="buyPerksGuide3">All perks have requirements, including a cost in Skill Points. If you meet all the requirements for a perk (not including the cost), it will appear on this page.</string>
+    <string name="buyPerksGuide4">All perks have positive and negative effects, balancing them out.</string>
+    <string name="buyPerksGuide5">Be sure to save at the bottom when you\'re done!</string>
+
+    <string name="statsGuide">Each stat governs a different resource for your character.</string>
+    <string name="statsGuide2">Some classes use a particular stat more than others (an elemental is likely to use a lot of mana, while a warrior will use way more stamina), but each class depends on all stats eventually. </string>
+    <string name="statsGuide3">Be sure to save when you\'re done!</string>
+
+    <string name="newFriendlyGuide">Player 1 is the character starting the game. If you want to change who it is, do so by changing the current character.</string>
+    <string name="newFriendlyGuide2">Player 2 can be any character, even the same one as player 1!</string>
+    <string name="newFriendlyGuide3">Be sure to pick a meaningful name; it is how you will find this game to continue playing later.</string>
+    <string name="newFriendlyGuide4">The terrain can greatly affect how a battle plays out. Try choosing one that is fair for both characters.</string>
+    <string name="newFriendlyGuide5">At the end of the turn limit, whoever has the most health wins. Picking none will make this battle a fight to the death!</string>
+
+    <string name="mainGuide">This is the main menu. Remember that the back button in the bottom left can be used to get back here from just about anywhere. </string>
+    <string name="mainGuide2">On the other hand, the back button in the top left (not shown on the main menu) will bring you to the previous screen you were on. Think of the top left arrow as a small jump back, while the bottom left arrow is a big jump back!</string>
+    <string name="mainGuide3">Additionally the menu in the top right can be used to change your current character or create a new one. This can be done from Any menu, but cannot be done while you\'re in a game. </string>
+
+    <string name="titleTips">If you\'re ever stuck or confused, click the title of a page for some tips!</string>
+    <string name="noChar">You have no character! Before you do anything, you have to create one in the menu in the top right corner.</string>
+    <string name="deleteChar">This will delete your character permanently. Are you sure you want to do this?</string>
+    <string name="noFriendlyName">Please enter a name for your new game!</string>
+
+
+    <string name="Wardes1">The warrior class specializes in melee combat. Warriors are proficient in a number of weapons such as swords, axes, and hammers. They are also well trained in the usage of shields and numerous close-combat maneuvers.</string>
+    <string name="Hypdes1">The magician class specializes in, well, magic. The magic they can perform ranged from hypnotizing a crowd with their magical watch to pulling a gun out of a hat. They are tricksters and show offs, the source of their power entirely unknown. </string>
+    <string name="Wizdes1">The elemental class specializes in spellcasting. Elementals are capable of controlling the 4 basic elements (earth, air, fire, and water) and are known for their temper. While they are very powerful, it takes them take a little longer to use their mystic powers. </string>
+    <string name="Meddes1">The mad doctor class specializes in the human anatomy. A full-fledged MD can heal even the most grievous of injuries, and even a novice can perform first aid in an a mere second. In addition to healing the body, MDs are also proficient in destroying and/or modifying it. </string>
+    <string name="Marksdes1">The marksman class specializes in ranged combat. Marksmen are capable of using long-range weapons such as bows and slings (and even guns if they are engineers). They also have impeccable sight, allowing them to see details others may overlook.</string>
+    <string name="Acrodes1">The acrobat class specializes in movement. Acrobats can move around in their environment with ease, allowing them to dodge and outmaneuver their opponents. They can even make precisely calculated movements to achieve feats such as catching an arrow. </string>
+    <string name="Nindes1">The ninja class specializes in ninjutsu. Ninja are able to sneak and take their opponent by surprise, create traps throughout their environment, and use all manner of deception, including illusions. </string>
+    <string name="Engdes1">The engineer class specializes in building. Engineers can use material they store in their inventory or even things they find in their environment to create a number of tools and gadgets. These include things such as bombs, machinery, and cross-class utilities.</string>
+    <string name="Wardes">
+<![CDATA[
+        <font color=#41A317>Offensive +</font><br>
+        <font color=#41A317>Defensive +</font><br>
+        <font color=#E42217>Supplementary - -</font>
+        ]]>
+    </string>
+    <string name="Wizdes">
+<![CDATA[
+        <font color=#0000CC>Balanced</font>
+        ]]>
+    </string>
+    <string name="Nindes">
+<![CDATA[
+        <font color=#E42217>Defensive -</font><br>
+        <font color=#41A317>Supplementary +</font>
+        ]]>
+    </string>
+    <string name="Meddes">
+<![CDATA[
+        <font color=#E42217>Offensive -</font><br>
+        <font color=#41A317>Supplementary +</font>
+        ]]>
+    </string>
+    <string name="Acrodes">
+<![CDATA[
+        <font color=#E42217>Offensive - -</font><br>
+        <font color=#41A317>Defensive +</font><br>
+        <font color=#41A317>Supplementary +</font>
+        ]]>
+    </string>
+    <string name="Engdes">
+<![CDATA[
+        <font color=#0000CC>Balanced</font>
+        ]]>
+    </string>
+    <string name="Marksdes">
+<![CDATA[
+        <font color=#41A317>Offensive + +</font><br>
+        <font color=#E42217>Defensive - -</font>
+        ]]>
+    </string>
+    <string name="Hypdes">
+<![CDATA[
+        <font color=#E42217>Defensive - -</font><br>
+        <font color=#41A317>Supplementary + +</font>
+        ]]>
+    </string>
+    <string name="title_activity_offline">offlineAct</string>
+    <string name="title_activity_newchar">newcharAct</string>
+    <string name="title_activity_game">gameAct</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_customize">customizeAct</string>
+
+</resources>

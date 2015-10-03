@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mainbackground"
+    android:padding="20dp">>
+<RelativeLayout
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/relativelayoutC">
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Stats"
+        android:id="@+id/statsTitle"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="50sp"
+        android:gravity="center_horizontal"
+        android:clickable="true"
+        android:onClick="statsInfo"/>
+
+    <TextView
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:id="@+id/spLeft"
+        android:layout_below="@+id/statsTitle"
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Health"
+        android:id="@+id/nameHealth"
+        android:textColor="@color/health_red"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:textSize="30sp"
+        android:layout_toLeftOf="@+id/spLeft"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="-20dp"
+        android:layout_below="@+id/spLeft" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/inHealthM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/spLeft"
+        android:layout_toRightOf="@+id/spLeft"
+        android:onClick="decHealth"
+        android:layout_marginLeft="-23dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/numHealth"
+        android:textSize="30sp"
+        android:layout_toRightOf="@+id/inHealthM"
+        android:textColor="#000000"
+        android:layout_alignBottom="@+id/nameHealth" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/inHealthP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/inHealthM"
+        android:layout_toRightOf="@+id/numHealth"
+        android:onClick="incHealth" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Stamina"
+        android:id="@+id/nameStamina"
+        android:textColor="@color/stamina_green"
+        android:textSize="30sp"
+        android:layout_below="@+id/nameHealth"
+        android:layout_alignRight="@+id/nameHealth"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/inStaminaM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/nameStamina"
+        android:layout_marginTop="10dp"
+        android:onClick="decStamina"
+        android:layout_alignLeft="@+id/inHealthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/numStamina"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:layout_toRightOf="@+id/inStaminaM"
+        android:layout_alignBottom="@+id/nameStamina" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/inStaminaP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/inStaminaM"
+        android:layout_toRightOf="@+id/numStamina"
+        android:onClick="incStamina" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Mana"
+        android:id="@+id/nameMana"
+        android:textColor="@color/mana_purple"
+        android:textSize="30sp"
+        android:layout_below="@+id/nameStamina"
+        android:layout_alignRight="@+id/nameStamina"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/inManaM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/nameMana"
+        android:layout_marginTop="10dp"
+        android:onClick="decMana"
+        android:layout_alignLeft="@+id/inHealthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/numMana"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:layout_toRightOf="@+id/inManaM"
+        android:layout_alignBottom="@+id/nameMana" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/inManaP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/inManaM"
+        android:layout_toRightOf="@+id/numMana"
+        android:onClick="incMana" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Focus"
+        android:id="@+id/nameFocus"
+        android:textColor="@color/focus_blue"
+        android:textSize="30sp"
+        android:layout_below="@+id/nameMana"
+        android:layout_alignRight="@+id/nameStamina"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:id="@+id/inFocusM"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/nameFocus"
+        android:layout_marginTop="10dp"
+        android:onClick="decFocus"
+        android:layout_alignLeft="@+id/inHealthM" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:id="@+id/numFocus"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:layout_toRightOf="@+id/inFocusM"
+        android:layout_alignBottom="@+id/nameFocus" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:id="@+id/inFocusP"
+        android:textSize="23sp"
+        android:background="@android:color/transparent"
+        android:layout_alignBottom="@+id/inFocusM"
+        android:layout_toRightOf="@+id/numFocus"
+        android:onClick="incFocus" />
+
+
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Save"
+        android:id="@+id/saveStats"
+        android:layout_below="@+id/inFocusP"
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:onClick="saveStats"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:textColor="@drawable/white_text_button"
+        android:background="@drawable/brush2_button"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>
+    </ScrollView>

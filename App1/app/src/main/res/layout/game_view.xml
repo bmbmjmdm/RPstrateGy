@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/mainbackground"
+    android:orientation="vertical"
+    android:id="@+id/gameBackground"
+    android:weightSum="2">
+    <LinearLayout
+        android:id="@+id/takeFoc"
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_height="0px"
+        android:layout_width="0px"/>
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="3dp"
+        android:id="@+id/timeBar"
+        android:max="3000"/>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1"
+        android:id="@+id/map">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id = "@+id/recycler"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/notMap"
+        android:layout_weight="1"
+        android:visibility="visible"
+        >
+
+        <LinearLayout
+            android:orientation= "horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:id="@+id/navButtons"
+            android:layout_alignParentStart="true"
+            android:weightSum="4">
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Overview"
+                android:textSize="12sp"
+                android:id="@+id/narrateBut"
+                android:background="@drawable/smudge_button"
+                android:textColor="@color/white_text_button"
+                android:onClick="showNarration"/>
+            <!--android:background="@drawable/brush1_button" -->
+            <!--style="@android:style/Widget.DeviceDefault.Button.Borderless"-->
+            <!--android:textColor="@drawable/white_text_button"-->
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Focus"
+                android:textSize="12sp"
+                android:id="@+id/mapInfoBut"
+                android:background="@drawable/smudge_button"
+                android:textColor="@color/white_text_button"
+                android:onClick="showMapInfo"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Patterns"
+                android:textSize="12sp"
+                android:id="@+id/mapFilterBut"
+                android:background="@drawable/smudge_button"
+                android:textColor="@color/white_text_button"
+                android:onClick="showMapFilter"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Actions"
+                android:textSize="12sp"
+                android:id="@+id/actionsBut"
+                android:background="@drawable/smudge_button"
+                android:textColor="@color/white_text_button"
+                android:onClick="showActions"/>
+
+        </LinearLayout>
+
+
+
+
+
+
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/narrateView"
+                android:padding="5dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:orientation= "horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:id="@+id/navButtonsNarrate"
+                    android:layout_alignParentStart="true"
+                    android:weightSum="4">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Turn"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:id="@+id/turnStatusBut"
+                        android:background="@drawable/eye_inverted"
+                        android:onClick="showTurnStatus"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="User"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:id="@+id/userStatusBut"
+                        android:background="@drawable/eye"
+                        android:textColor="@color/black_text_button"
+                        android:onClick="showUserStatus"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Alerts"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:id="@+id/alertsBut"
+                        android:background="@drawable/eye"
+                        android:textColor="@color/black_text_button"
+                        android:onClick="showAlerts"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="History"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:id="@+id/historyBut"
+                        android:background="@drawable/eye"
+                        android:textColor="@color/black_text_button"
+                        android:onClick="showHistory"/>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/historyView"
+                        android:padding="5dp"
+                        android:visibility="gone">
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id = "@+id/history"></android.support.v7.widget.RecyclerView>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/userStatusView"
+                        android:padding="5dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="2"
+                            android:paddingLeft="15dp">
+
+                            <ScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:id="@+id/statsView"></LinearLayout>
+                            </ScrollView>
+
+                            <ScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="30dp"
+                                    android:id="@+id/classesView"></LinearLayout>
+                            </ScrollView>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/alertsView"
+                        android:padding="5dp"
+                        android:visibility="gone">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id = "@+id/alerts"></android.support.v7.widget.RecyclerView>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/turnStatusView"
+                        android:padding="5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="27sp"
+                            android:textColor="@color/full_black"
+                            android:id="@+id/timeText"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:paddingBottom="5dp"/>
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/curTurnNarScroller">
+
+                            <LinearLayout
+                                android:orientation= "vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/curTurnNarrate"></LinearLayout>
+
+                        </ScrollView>
+
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/mapInfo"
+                android:padding="5dp"
+                android:visibility="gone">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:text="Back"
+                    android:id="@+id/infoBackBut"
+                    android:onClick="infoBack"
+                    android:background="@drawable/brush2_button"
+                    android:textColor="@color/white_text_button"
+                    android:textSize="25sp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"/>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">>
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/objectView"
+                            android:animateLayoutChanges="true"></LinearLayout>
+                    </ScrollView>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">>
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/typeView"
+                            android:animateLayoutChanges="true"></LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/mapFilter"
+                android:padding="5dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:orientation= "horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_alignParentStart="true"
+                    android:weightSum="2">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Preset"
+                        android:id="@+id/presetFiltersBut"
+                        android:onClick="presetFilters"
+                        android:background="@drawable/hair_flipped_inverted"
+                        android:textColor="@color/full_black"
+                        android:textSize="19sp"
+                        android:layout_weight="1"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Custom"
+                        android:id="@+id/customFiltersBut"
+                        android:onClick="customFilters"
+                        android:background="@drawable/hair"
+                        android:textColor="@color/full_white"
+                        android:textSize="19sp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewCustomFilters"
+                    android:visibility="gone">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/customFilterOptions"></LinearLayout>        </ScrollView>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewPresetFilters"
+                    android:visibility="visible">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/presetFilterOptions"></LinearLayout>   </ScrollView>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/actionMenuHolder"
+                android:visibility="gone">
+                <FrameLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/actionsView"
+                        android:weightSum="2"
+                        android:padding="5dp">
+
+                        <RelativeLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+                            <GridView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:columnWidth="75dp"
+                                android:numColumns="auto_fit"
+                                android:verticalSpacing="10dp"
+                                android:horizontalSpacing="10dp"
+                                android:stretchMode="columnWidth"
+                                android:id="@+id/actionsAvailable"></GridView>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+                            <ScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">>
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/actionsInfo"
+                                    android:padding="10dp"></LinearLayout>
+                            </ScrollView>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/actionsInput"
+                        android:padding="5dp"
+                        android:visibility="gone">
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:layout_gravity="center_horizontal"
+                                    android:id="@+id/actInInfo"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"/>
+
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/actInOptions"
+                                    android:layout_marginTop="10dp"/>
+
+                                <Button
+                                    android:layout_width="300dp"
+                                    android:layout_height="45dp"
+                                    android:text="Back To Actions"
+                                    android:id="@+id/actReturn"
+                                    android:layout_marginTop="30dp"
+                                    android:textSize="16sp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:background="@drawable/brush2_button"
+                                    android:textColor="@drawable/white_text_button"
+                                    android:onClick="actionsReturn" />
+
+                            </LinearLayout>
+
+                        </ScrollView>
+
+                    </LinearLayout>
+
+
+                </FrameLayout>
+            </LinearLayout>
+
+
+
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/actionAlert"
+                android:visibility="gone"/>
+
+
+
+
+
+
+
+
+
+
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+    <!--</LinearLayout>-->

@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout         android:background="@drawable/mainbackground"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true" android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Classes"
+        android:id="@+id/classTitle"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="50sp"
+        android:onClick="classesInfo"
+        android:clickable="true"
+        android:textColor="#ff000000"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/spLeft"
+        android:textSize="50sp"
+        android:textIsSelectable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_below="@+id/classTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="330dp"
+        android:id="@+id/scrollableClasses"
+        android:layout_below="@+id/spLeft"
+        android:layout_marginTop="10dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewWiz"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Elemental"
+            android:id="@+id/desWiz"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewWiz"
+            android:background="@drawable/brush1_button"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inWizM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desWiz"
+            android:layout_toRightOf="@+id/desWiz"
+            android:onClick="decWiz"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inWizP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numWiz"
+            android:layout_alignBottom="@+id/inWizM"
+            android:onClick="incWiz"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numWiz"
+            android:layout_alignBottom="@+id/inWizM"
+            android:layout_toRightOf="@+id/inWizM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textWiz"
+            android:layout_below="@+id/text1Wiz"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Wiz"
+            android:layout_below="@+id/desWiz"
+            android:text="@string/Wizdes1"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewWar"
+        android:layout_below="@+id/viewWiz"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Warrior"
+            android:id="@+id/desWar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewWar"
+            android:background="@drawable/brush1flip_button"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inWarM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desWar"
+            android:layout_toRightOf="@+id/desWar"
+            android:onClick="decWar"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inWarP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numWar"
+            android:layout_alignBottom="@+id/inWarM"
+            android:onClick="incWar"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numWar"
+            android:layout_alignBottom="@+id/inWarP"
+            android:layout_toRightOf="@+id/inWarM"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textWar"
+            android:layout_below="@+id/text1War"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1War"
+            android:layout_below="@+id/desWar"
+            android:text="@string/Wardes1"
+            android:textColor="#ff000000"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewNin"
+        android:layout_below="@+id/viewWar"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Ninja"
+            android:id="@+id/desNin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewNin"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inNinM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desNin"
+            android:layout_toRightOf="@+id/desNin"
+            android:onClick="decNin"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inNinP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numNin"
+            android:layout_alignBottom="@+id/inNinM"
+            android:onClick="incNin"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numNin"
+            android:layout_alignBottom="@+id/inNinP"
+            android:layout_toRightOf="@+id/inNinM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textNin"
+            android:layout_below="@+id/text1Nin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Nin"
+            android:text="@string/Nindes1"
+            android:layout_below="@+id/desNin"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewMarks"
+        android:layout_below="@+id/viewNin"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Marksman"
+            android:id="@+id/desMarks"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewMarks"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1flip_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inMarksM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desMarks"
+            android:layout_toRightOf="@+id/desMarks"
+            android:onClick="decMarks"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inMarksP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numMarks"
+            android:layout_alignBottom="@+id/inMarksM"
+            android:onClick="incMarks"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numMarks"
+            android:layout_alignBottom="@+id/inMarksP"
+            android:layout_toRightOf="@+id/inMarksM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMarks"
+            android:layout_below="@+id/text1Marks"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Marks"
+            android:layout_below="@+id/desMarks"
+            android:text="@string/Marksdes1"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewEng"
+        android:layout_below="@+id/viewMarks"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Engineer"
+            android:id="@+id/desEng"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewEng"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inEngM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desEng"
+            android:layout_toRightOf="@+id/desEng"
+            android:onClick="decEng"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inEngP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numEng"
+            android:layout_alignBottom="@+id/inEngM"
+            android:onClick="incEng"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numEng"
+            android:layout_alignBottom="@+id/inEngP"
+            android:layout_toRightOf="@+id/inEngM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textEng"
+            android:layout_below="@+id/text1Eng"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Eng"
+            android:layout_below="@+id/desEng"
+            android:text="@string/Engdes1"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewAcro"
+        android:layout_below="@+id/viewEng"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Acrobat"
+            android:id="@+id/desAcro"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewAcro"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1flip_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inAcroM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desAcro"
+            android:layout_toRightOf="@+id/desAcro"
+            android:onClick="decAcro"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inAcroP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numAcro"
+            android:layout_alignBottom="@+id/inAcroM"
+            android:onClick="incAcro"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numAcro"
+            android:layout_alignBottom="@+id/inAcroP"
+            android:layout_toRightOf="@+id/inAcroM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textAcro"
+            android:layout_below="@+id/text1Acro"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Acro"
+            android:layout_below="@+id/desAcro"
+            android:text="@string/Acrodes1"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewMed"
+        android:layout_below="@+id/viewAcro"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Mad Doctor"
+            android:id="@+id/desMed"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewMed"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inMedM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desMed"
+            android:layout_toRightOf="@+id/desMed"
+            android:onClick="decMed"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inMedP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numMed"
+            android:layout_alignBottom="@+id/inMedM"
+            android:onClick="incMed"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numMed"
+            android:layout_alignBottom="@+id/inMedP"
+            android:layout_toRightOf="@+id/inMedM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMed"
+            android:layout_below="@+id/text1Med"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Med"
+            android:text="@string/Meddes1"
+            android:layout_below="@+id/desMed"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:id="@+id/viewHyp"
+        android:layout_below="@+id/viewMed"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="225dp"
+            android:layout_height="50dp"
+            android:text="Magician"
+            android:id="@+id/desHyp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:onClick="viewHyp"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:textColor="@drawable/white_text_button"
+            android:background="@drawable/brush1flip_button"
+            android:layout_marginLeft="-20dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/inHypM"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/desHyp"
+            android:layout_toRightOf="@+id/desHyp"
+            android:onClick="decHyp"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/inHypP"
+            android:width="15dp"
+            android:singleLine="false"
+            android:layout_toRightOf="@+id/numHyp"
+            android:layout_alignBottom="@+id/inHypM"
+            android:onClick="incHyp"
+            android:background="@android:color/transparent"
+            android:textSize="23sp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="0"
+            android:id="@+id/numHyp"
+            android:layout_alignBottom="@+id/inHypP"
+            android:layout_toRightOf="@+id/inHypM"
+            android:textAlignment="center"
+            android:numeric="integer"
+            android:textSize="20sp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textHyp"
+            android:layout_below="@+id/text1Hyp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1Hyp"
+            android:layout_below="@+id/desHyp"
+            android:text="@string/Hypdes1"
+            android:textColor="#ff000000"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+    </RelativeLayout>
+
+
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Save"
+        android:id="@+id/saveClasses"
+        android:layout_below="@+id/scrollableClasses"
+        android:layout_centerHorizontal="true"
+        android:onClick="saveClasses"
+        android:textColor="@drawable/white_text_button"
+        android:background="@drawable/brush2_button"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>

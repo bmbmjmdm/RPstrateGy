@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light_blue">#00FFFF</color>
+    <color name="dark_gold">#996600</color>
+    <color name="black">#000000</color>
+    <color name="deletePress">#88770007</color>
+    <color name="deleteEnable">#88b30008</color>
+    <color name="deleteDisable">#28b30008</color>
+    <color name="full_white">#ffffffff</color>
+    <color name="full_black">#ff000000</color>
+    <color name="green_grass">#00FF00</color>
+    <color name="green_grass_dark">#006600</color>
+    <color name="brown_dirt">#996633</color>
+    <color name="brown_dirt_dark">#663300</color>
+    <color name="grey">#999999</color>
+    <color name="light_grey">#b5b5b5</color>
+    <color name="highlight_red">#FFBFBF</color>
+    <color name="highlight_green">#C2FFBF</color>
+
+    <color name="alert_title">#4C0000</color>
+    <color name="alert_but_text">#A10000</color>
+
+    <color name="stamina_green">#41A317</color>
+    <color name="mana_purple">#993399</color>
+    <color name="focus_blue">#0000CC</color>
+    <color name="health_red">#E42217</color>
+    <color name="ap_gold">#996600</color>
+</resources>

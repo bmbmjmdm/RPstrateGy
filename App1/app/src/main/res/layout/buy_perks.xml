@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/relativelayoutC"
+    android:background="@drawable/mainbackground"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buy  Perks"
+        android:id="@+id/buyPerksTitle"
+        android:layout_alignParentTop="true"
+        android:textSize="50sp"
+        android:onClick="buyPerksInfo"
+        android:clickable="true"
+        android:textColor="#ff000000"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="0"
+        android:id="@+id/spLeft"
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/buyPerksTitle"
+        android:layout_marginTop="30dp"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="310dp"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/spLeft"
+        android:id="@+id/scrollableList">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/charPerkOptions"></LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Save"
+        android:id="@+id/saveBuyPerks"
+        android:layout_below="@+id/scrollableList"
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:onClick="saveBuyPerks"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:textColor="@drawable/white_text_button"
+        android:background="@drawable/brush2_button"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mainbackground"
+    android:padding="20dp"
+    android:clickable="false">>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:onClick="takeFoc"
+        android:clickable="true">
+
+        <LinearLayout
+            android:id="@+id/newtakeFoc"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_height="0px"
+            android:layout_width="0px"/>
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:text="Player  1"
+            android:id="@+id/p1Label"
+            android:textSize="25sp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/newfriendlyName"
+            android:layout_alignParentStart="false"
+            android:layout_marginTop="30dp" />
+
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:id="@+id/p1Name"
+            android:textSize="25sp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical|end"
+            android:layout_below="@+id/newfriendlyName"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:lines="2" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Player  2"
+            android:id="@+id/p2Label"
+            android:textSize="25sp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/p1Label"
+            android:layout_marginTop="30dp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:id="@+id/p2Spinner"
+            android:layout_alignParentEnd="true"
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="30dp"
+            android:layout_below="@+id/p1Name" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Terrain"
+            android:id="@+id/terrainLabel"
+            android:textSize="25sp"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/p2Label"
+            android:singleLine="true"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:id="@+id/terrainSpinner"
+            android:layout_alignParentEnd="true"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/p2Spinner"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Turn  Limit"
+            android:id="@+id/turnLabel"
+            android:textSize="25sp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/terrainLabel"
+            android:layout_marginTop="30dp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:id="@+id/turnSpinner"
+            android:layout_alignParentEnd="true"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/terrainSpinner"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Map  Size"
+            android:id="@+id/sizeLabel"
+            android:textSize="25sp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/turnLabel"
+            android:layout_marginTop="30dp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:id="@+id/sizeSpinner"
+            android:layout_alignParentEnd="true"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/turnSpinner"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Daytime"
+            android:id="@+id/dayLabel"
+            android:textSize="25sp"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/sizeLabel"
+            android:layout_marginTop="30dp"
+            android:textColor="#ff000000"
+            android:gravity="center_vertical" />
+
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/dayButton"
+            android:layout_below="@+id/sizeSpinner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/empty_checkbox"
+            android:scaleType="centerCrop"
+            android:onClick="setDay" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New  Game"
+            android:id="@+id/newfriendlyTitle"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp"
+            android:textColor="#ff000000"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:onClick="newFriendlyInfo"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newfriendlyName"
+            android:layout_below="@+id/newfriendlyTitle"
+            android:layout_centerHorizontal="true"
+            android:hint="Enter Game Name"
+            android:layout_marginTop="30dp"
+            android:textSize="25sp"
+            android:textColor="#ff000000"
+            android:width="300dp"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:gravity="center_horizontal"
+            android:inputType="text|textCapSentences" />
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="40dp"
+            android:text="Start"
+            android:id="@+id/newfriendlyDone"
+            android:layout_below="@+id/dayLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/white_text_button"
+            android:background="@drawable/brush2_button"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:onClick="tryFinishNewFriendly" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
