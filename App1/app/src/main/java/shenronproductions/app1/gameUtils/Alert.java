@@ -1,6 +1,4 @@
-package shenronproductions.app1;
-
-import android.widget.Button;
+package shenronproductions.app1.gameUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

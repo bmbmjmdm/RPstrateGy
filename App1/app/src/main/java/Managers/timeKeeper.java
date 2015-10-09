@@ -1,7 +1,5 @@
 package Managers;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,8 +9,7 @@ import java.util.List;
 
 import database.Actions.Action;
 import database.Actions.ActionSteps.ActionStep;
-import database.Objs.PObjs.User;
-import shenronproductions.app1.Alert;
+import shenronproductions.app1.gameUtils.Alert;
 
 /**
  * Created by Dale on 4/9/2015.

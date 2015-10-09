@@ -8,15 +8,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import Utilities.ClimbObj;
 import Utilities.IntPair;
-import Utilities.RemovedException;
-import Utilities.Stat;
 import database.Coord;
-import database.Narration;
 import database.ObjT.ObjT;
 import database.ObjT.Stealthed;
 import database.Objs.CObjs.BodyPart;
@@ -24,9 +20,7 @@ import database.Objs.CObjs.CObj;
 import database.Objs.Obj;
 import database.Objs.PObjs.User;
 import Managers.GameManager;
-import Managers.timeKeeper;
 import database.State;
-import shenronproductions.app1.Alert;
 
 /**
  * Created by Dale on 4/29/2015.

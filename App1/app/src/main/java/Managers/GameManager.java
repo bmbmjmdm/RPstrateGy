@@ -5,9 +5,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.PathInterpolator;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -37,7 +35,7 @@ import database.State;
 import Managers.Logic.LogicCalc;
 import shenronproductions.app1.Activities.gameAct;
 import shenronproductions.app1.Activities.offlineAct;
-import shenronproductions.app1.Alert;
+import shenronproductions.app1.gameUtils.Alert;
 import shenronproductions.app1.R;
 
 /**

@@ -1,7 +1,5 @@
 package shenronproductions.app1.Activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -17,7 +15,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.GridView;
@@ -68,7 +65,7 @@ import database.Objs.PObjs.PObj;
 import database.Objs.PObjs.User;
 import database.State;
 import Managers.Logic.LogicCalc;
-import shenronproductions.app1.Alert;
+import shenronproductions.app1.gameUtils.Alert;
 import shenronproductions.app1.R;
 
 

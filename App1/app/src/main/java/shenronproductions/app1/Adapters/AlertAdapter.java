@@ -2,7 +2,6 @@ package shenronproductions.app1.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -11,11 +10,9 @@ import java.util.HashSet;
 import Managers.GameManager;
 import Managers.timeKeeper;
 import Utilities.Callable;
-import database.Narration;
 import database.ObjT.ObjT;
-import database.State;
 import shenronproductions.app1.Activities.gameAct;
-import shenronproductions.app1.Alert;
+import shenronproductions.app1.gameUtils.Alert;
 import shenronproductions.app1.R;
 
 /**

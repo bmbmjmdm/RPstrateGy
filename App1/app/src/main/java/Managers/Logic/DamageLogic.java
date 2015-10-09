@@ -24,9 +24,8 @@ import database.ObjT.bpStrike;
 import database.Objs.CObjs.CObj;
 import database.Objs.Obj;
 import database.Objs.PObjs.PObj;
-import database.Objs.PObjs.User;
 import database.State;
-import shenronproductions.app1.Alert;
+import shenronproductions.app1.gameUtils.Alert;
 
 /**
  * Created by Dale on 5/1/2015.
