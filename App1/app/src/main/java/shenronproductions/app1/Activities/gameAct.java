@@ -17,7 +17,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,38 +44,39 @@ import Popups.ProcessPastTurn;
 import Utilities.Callable;
 import Utilities.Constants;
 import Utilities.EmptyCallable;
+import Utilities.IntObj;
 import database.Actions.ActionSteps.ActionStep;
 import database.Actions.Climb;
 import database.Actions.SubActions.SubAction;
+import database.Objs.PObjs.PObj;
 import database.Requirements.Requirement;
-import shenronproductions.app1.Adapters.ActionsAdapter;
+import shenronproductions.app1.gameUtils.ActionsAdapter;
 import Utilities.ClimbObj;
 import Utilities.FixedGridLayoutManager;
-import Utilities.IntObj;
-import shenronproductions.app1.Adapters.AlertAdapter;
-import shenronproductions.app1.Adapters.NarrationAdapter;
+import shenronproductions.app1.gameUtils.AlertAdapter;
+import shenronproductions.app1.gameUtils.NarrationAdapter;
 import Utilities.RemovedException;
 import Utilities.Stat;
-import shenronproductions.app1.Adapters.StateAdapter;
+import shenronproductions.app1.gameUtils.StateAdapter;
 import database.Actions.Action;
 import database.Coord;
 import database.Narration;
 import database.ObjT.ObjT;
 import database.Objs.CObjs.CObj;
 import database.Objs.Obj;
-import database.Objs.PObjs.PObj;
 import database.Objs.PObjs.User;
 import database.State;
 import Managers.Logic.LogicCalc;
 import shenronproductions.app1.gameUtils.Alert;
 import shenronproductions.app1.R;
+import shenronproductions.app1.gameUtils.viewGrid;
 
 
 public class gameAct extends Activity {
     TextView curSelected = null;
     LinearLayout curOpened = null;
     HashSet<Coord> curHighlighted = new HashSet<Coord>();
-    HashSet<Coord> defaultHighlight = new HashSet<Coord>();
+    public HashSet<Coord> defaultHighlight = new HashSet<Coord>();
     public View curInfoView = null;
     public View curNarrateView = null;
     HashSet<String> filterThese = new HashSet<String>();
@@ -139,6 +142,11 @@ public class gameAct extends Activity {
     HashMap<Integer, Integer> colorCur = new HashMap<>();
     HashMap<Integer, Integer> colorPast = new HashMap<>();
     public boolean visionChanged = false;
+
+    //used by viewGrid for breaking up or putting together obj
+    public HashMap<Integer, Boolean> showParent = new HashMap<>();
+    public HashMap<Integer, Boolean> showSelf = new HashMap<>();
+
 
 
 
@@ -301,6 +309,10 @@ public class gameAct extends Activity {
 
     //TODO the NewTurnPhase() popup needs a catch block because it looks up the user
     public void newTurnPhase(boolean processPastTurn){
+
+        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
+        HashMap<Integer, Boolean> showParent = new HashMap<>();
+        HashMap<Integer, Boolean> showSelf = new HashMap<>();
 
         updatePresetFilters();
 
@@ -917,8 +929,7 @@ public class gameAct extends Activity {
         curSelected = null;
         curOpened = null;
         defaultHighlight.clear();
-        ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
-        ((LinearLayout) findViewById(R.id.objectView)).removeAllViews();
+        ((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)).removeAllViews();
     }
 
 
@@ -1020,8 +1031,8 @@ public class gameAct extends Activity {
                 if (o instanceof Narration)
                     setObjects((Narration) o);
 
-                else if (o instanceof PObj)
-                    setObjects((PObj) o);
+                else if (o instanceof Obj)
+                    setObjects((Obj) o);
 
                 else if (o instanceof Coord)
                     setObjects((Coord) o);
@@ -1034,147 +1045,81 @@ public class gameAct extends Activity {
 
 
     public void setObjects(Narration n){
+        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(n);
         unHighlightCoords(curHighlighted);
         defaultHighlight.clear();
-        ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
-        curOpened = null;
-        curSelected = null;
-        LinearLayout objV = (LinearLayout) findViewById(R.id.objectView);
-        objV.removeAllViews();
 
-        HashMap<String, HashSet<Obj>> objs = new HashMap<String, HashSet<Obj>>();
+        HashSet<Obj> objs = new HashSet<Obj>();
         for(Obj o : n.getInvolves()) {
-                if(isVisible(o)) {
-                    if(!isFiltered(o)) {
-                        String name = o.name;
-                        HashSet<Obj> objsOAL = objs.get(name);
-                        if (objsOAL == null) {
-                            objsOAL = new HashSet<Obj>();
-                        }
-                        objsOAL.add(o);
-                        objs.put(name, objsOAL);
-                    }
-                }
+            if(isVisible(o)) {
+                objs.add(o);
             }
 
-        setObjects(objs, null);
+        }
+
+        viewGrid gridBuilder = new viewGrid(objs, true, true);
+        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
     }
 
 
     public void setObjects(Coord c){
+        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(c);
         HashSet<Coord> coords = new HashSet<Coord>();
         coords.add(c);
         highlightCoords(coords);
         defaultHighlight.clear();
         defaultHighlight.add(c);
-        ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
-        curOpened = null;
-        curSelected = null;
-        LinearLayout objV = (LinearLayout) findViewById(R.id.objectView);
-        objV.removeAllViews();
-        StringBuilder builder = new StringBuilder();
-        builder.append("(");
-        builder.append(c.x);
-        builder.append(",  ");
-        builder.append(c.y);
-        builder.append(")");
-        TextView title = getElement(builder.toString(), ElementT.TITLE);
-        objV.addView(title);
 
         TreeSet<CObj> Cobjs = GameManager.getInstance().getState().getObjC(c);
-        HashMap<String, HashSet<Obj>> objs = new HashMap<String, HashSet<Obj>>();
+        HashSet<CObj> objs = new HashSet<CObj>();
         for(CObj co : Cobjs) {
             if(isVisible(co, c)) {
-                if(!isFiltered(co, c)) {
-                    Obj o = co.getPresentable(c);
-                    String name = o.name;
-                    HashSet<Obj> objsOAL = objs.get(name);
-                    if (objsOAL == null) {
-                        objsOAL = new HashSet<Obj>();
-                    }
-                    objsOAL.add(o);
-                    objs.put(name, objsOAL);
-                }
+                objs.add(co);
             }
         }
-        setObjects(objs, null);
-
+        viewGrid gridBuilder = new viewGrid(objs, c, true, true);
+        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
     }
 
 
     public void setObjects(final Obj po){
+        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(po);
-        highlightCoords(getHighlightableCoords(po));
+        HashSet<Coord> coords = getHighlightableCoords(po);
+        highlightCoords(coords);
         defaultHighlight.clear();
-        defaultHighlight.addAll(getHighlightableCoords(po));
-        ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
-        curOpened = null;
-        curSelected = null;
-        LinearLayout objV = (LinearLayout) findViewById(R.id.objectView);
-        objV.removeAllViews();
-        final TextView title = getElement(po.name, ElementT.TITLE);
-        final LinearLayout.LayoutParams listClosed = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        final int black = getResources().getColor(R.color.full_black);
-        final int white = getResources().getColor(R.color.full_white);
+        defaultHighlight.addAll(coords);
 
-
-        title.setTextColor(white);
-        curSelected = title;
-        setTypes(po);
-
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (curSelected == title) {
-                    title.setTextColor(black);
-                    ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
-                    curSelected = null;
-                } else {
-                    title.setTextColor(white);
-                    if (curSelected != null)
-                        curSelected.setTextColor(black);
-                    if (curOpened != null)
-                        curOpened.setLayoutParams(listClosed);
-                    curSelected = title;
-                    setTypes(po);
-                    highlightCoords(defaultHighlight);
-                }
-
-            }
-        });
-        objV.addView(title);
-        HashMap<String, HashSet<Obj>> objs = new HashMap<String, HashSet<Obj>>();
+        HashSet<Obj> objs = new HashSet<Obj>();
 
         if(po instanceof PObj) {
             PObj poParent = (PObj) po;
             ArrayList<IntObj> Cobjs = poParent.getChildren();
+
             for (IntObj co : Cobjs) {
                 Obj o = co.o;
-                if (!isVisible(o))
-                    continue;
-                if (isFiltered(o))
-                        continue;
-
-
-                String name = o.name;
-                HashSet<Obj> objsOAL = objs.get(name);
-                if (objsOAL == null) {
-                    objsOAL = new HashSet<Obj>();
+                if (isVisible(o)) {
+                    objs.add(o);
                 }
-                objsOAL.add(o);
-                objs.put(name, objsOAL);
             }
-        }
-        setObjects(objs, po);
-    }
 
+        }
+        else if (isVisible(po)){
+            objs.add(po);
+        }
+
+
+        viewGrid gridBuilder = new viewGrid(objs, true, true);
+        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
+    }
+/*
     //this should only be called from setObjects
     //onclick will expand all of the objects below it and change the font color of branch(10)
     //also when you click something it will drop down "see parent" and "see children" options (these should be renamed)
     private void setObjects(HashMap<String, HashSet<Obj>> objsMap, Obj container){
-        LinearLayout objV = (LinearLayout) findViewById(R.id.objectView);
+        //LinearLayout objV = (LinearLayout) findViewById(R.id.objectView);
 
         if(container != null) {
             final PObj parent = container.parent;
@@ -1186,7 +1131,7 @@ public class gameAct extends Activity {
                         setObjects(parent);
                     }
                 });
-                objV.addView(parentTV);
+                //objV.addView(parentTV);
             }
         }
 
@@ -1226,7 +1171,7 @@ public class gameAct extends Activity {
                     }
                 });
                 //add the list name to the screen
-                objV.addView(listName);
+                //objV.addView(listName);
 
                 for(final Obj o: objs) {
                     final LinearLayout listRelatives = new LinearLayout(this);
@@ -1264,7 +1209,7 @@ public class gameAct extends Activity {
                         public void onClick(View v) {
                             if (curSelected == aCopy) {
                                 aCopy.setTextColor(black);
-                                ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
+                                //((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
                                 curSelected = null;
                                 if (hasRelatives) {
                                     listRelatives.setLayoutParams(listClosed);
@@ -1294,7 +1239,7 @@ public class gameAct extends Activity {
 
                 }
                 //add the list of copies of objects to the screen, by default not appearing until opened
-                objV.addView(listCopies, listClosed);
+               // objV.addView(listCopies, listClosed);
 
             }
 
@@ -1340,7 +1285,7 @@ public class gameAct extends Activity {
                         if (curSelected == element) {
                             element.setTextColor(black);
                             curSelected = null;
-                            ((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
+                            //((LinearLayout) findViewById(R.id.typeView)).removeAllViews();
                             if (hasRelatives) {
                                 listRelatives.setLayoutParams(listClosed);
                             }
@@ -1363,9 +1308,9 @@ public class gameAct extends Activity {
                     }
                 });
 
-                objV.addView(element);
-                if (hasRelatives)
-                    objV.addView(listRelatives, listClosed);
+                //objV.addView(element);
+                //if (hasRelatives)
+                    //objV.addView(listRelatives, listClosed);
 
 
             }
@@ -1379,8 +1324,8 @@ public class gameAct extends Activity {
 
     public void setTypes(Obj obj){
         State state = GameManager.getInstance().getState();
-        LinearLayout typesV = (LinearLayout) findViewById(R.id.typeView);
-        typesV.removeAllViews();
+        //LinearLayout typesV = (LinearLayout) findViewById(R.id.typeView);
+        //typesV.removeAllViews();
         Typeface font = Typeface.createFromAsset(getAssets(), "njnaruto.ttf");
 
         int sp10 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics());
@@ -1393,7 +1338,7 @@ public class gameAct extends Activity {
             tV.setTypeface(font);
             tV.setTextSize(sp10);
             tV.setPadding(0, 0, 0, dp8);
-            typesV.addView(tV);
+            //typesV.addView(tV);
         }
 
         Integer standingOn = obj.standingOn;
@@ -1413,7 +1358,7 @@ public class gameAct extends Activity {
                             setObjects(onThis);
                         }
                     });
-                    typesV.addView(tV);
+                    //typesV.addView(tV);
                 }
 
             }
@@ -1439,7 +1384,7 @@ public class gameAct extends Activity {
                             setObjects(supThis);
                         }
                     });
-                    typesV.addView(tV);
+                    //typesV.addView(tV);
                 }
             }
 
@@ -1451,7 +1396,7 @@ public class gameAct extends Activity {
         }
 
 
-    }
+    }*/
 
     public TextView getElement(String name, ElementT type){
         Typeface font = Typeface.createFromAsset(getAssets(), "njnaruto.ttf");
@@ -2216,6 +2161,7 @@ public class gameAct extends Activity {
                     showMapInfo(null);
 
                 setObjects(c);
+
             }
         }
     }

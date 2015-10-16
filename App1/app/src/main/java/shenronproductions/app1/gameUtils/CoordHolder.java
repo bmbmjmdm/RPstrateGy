@@ -1,4 +1,4 @@
-package shenronproductions.app1.Adapters;
+package shenronproductions.app1.gameUtils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

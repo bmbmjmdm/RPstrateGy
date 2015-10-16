@@ -1,4 +1,4 @@
-package shenronproductions.app1.Adapters;
+package shenronproductions.app1.gameUtils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import Managers.timeKeeper;
 import Utilities.Callable;
 import database.ObjT.ObjT;
 import shenronproductions.app1.Activities.gameAct;
-import shenronproductions.app1.gameUtils.Alert;
 import shenronproductions.app1.R;
 
 /**

@@ -40,6 +40,57 @@ public class UtilityLogic {
 
 
 
+    public boolean overlapping(Obj o, int z){
+        final int imaginaryHeight = 1;
+
+        //for all children
+        for(CObj co: o.getAllLeafs()) {
+            //for all locations child is on
+            for(Coord c: co.getLoc()) {
+
+                int curHeight = co.getHeight();
+
+                int minZ = Math.min(co.getLowestZ(), z);
+                int maxZ = Math.max(z + imaginaryHeight, co.getHighestZ() + curHeight);
+                int hitBox = maxZ - minZ;
+
+                if (curHeight + imaginaryHeight > hitBox) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean overlapping(Obj o, int z, Coord c){
+        final int imaginaryHeight = 1;
+
+        //for all children
+        for(CObj co: o.getAllLeafs()) {
+
+            //check if the child is on coord c
+            Integer curZ = co.getZ(c.x, c.y);
+            if(curZ != null) {
+
+                int curHeight = co.getHeight();
+
+                int minZ = Math.min(z, curZ);
+                int maxZ = Math.max(z + imaginaryHeight, curZ + curHeight);
+                int hitBox = maxZ - minZ;
+
+                if (curHeight + imaginaryHeight > hitBox) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+
+
     //gets any CObj that is overlapping at +/- zLenience
     public HashSet<CObj> getCObjAround(Coord at, int zLenience){
         NavigableSet<CObj> onSpot = GameManager.getInstance().getState().getObjCBelow(new Coord(at.x, at.y, at.z + zLenience+1));

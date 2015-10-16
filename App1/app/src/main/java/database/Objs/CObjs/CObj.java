@@ -309,7 +309,6 @@ public abstract class CObj extends Obj {
     @Override
     public ArrayList<String> getDescription(){
         ArrayList<String> desc = super.getDescription();
-        desc.add(0, "<font color=#000000>Symbol: "+getIcon()+"</font>");
 
         String onGround;
         int zAvg = getLowestZ();
@@ -319,11 +318,11 @@ public abstract class CObj extends Obj {
             onGround =  "<font color=#0000CC>"+((double) zAvg/100)+"</font><font color=#000000>m &#160;Above &#160;ground</font>";
         else
             onGround =  "<font color=#996633>"+((double) zAvg/100)+"</font><font color=#000000>m &#160;Below &#160;ground</font>";
-        desc.add(2, onGround);
+        desc.add(1, onGround);
 
-        desc.add(3, "<font color=#6600CC>"+height+"</font><font color=#000000>cm &#160;Tall</font>");
+        desc.add(2, "<font color=#6600CC>"+height+"</font><font color=#000000>cm &#160;Tall</font>");
 
-        desc.add(4, "<font color=#6600CC>"+width+"</font><font color=#000000>cm &#160;wide</font>");
+        desc.add(3, "<font color=#6600CC>"+width+"</font><font color=#000000>cm &#160;wide</font>");
 
         return desc;
     }

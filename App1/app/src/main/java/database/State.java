@@ -360,7 +360,7 @@ public class State implements Serializable {
                 //ground
                 ran = Math.random();
                 ArrayList<Coord> groundAL = new ArrayList<Coord>();
-                groundAL.add(new Coord(x, y));
+                groundAL.add(new Coord(x, y, -1));
                 dirt = new Dirt(groundAL);
                 grassD = dirt;
 

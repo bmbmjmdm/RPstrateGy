@@ -1,4 +1,4 @@
-package shenronproductions.app1.Adapters;
+package shenronproductions.app1.gameUtils;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -13,7 +13,6 @@ import java.util.TreeSet;
 
 import Utilities.StringInt;
 import database.Coord;
-import database.ObjT.ObjT;
 import database.Objs.CObjs.CObj;
 import database.State;
 import Managers.GameManager;

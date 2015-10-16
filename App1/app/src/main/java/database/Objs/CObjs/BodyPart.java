@@ -49,6 +49,11 @@ public class BodyPart extends CObj {
         return this;
     }
 
+    @Override
+    public Obj getPresentable(){
+        return parent;
+    }
+
 
     @Override
     public String getFilterText(){

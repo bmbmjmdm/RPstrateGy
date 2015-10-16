@@ -1,4 +1,4 @@
-package shenronproductions.app1.Adapters;
+package shenronproductions.app1.gameUtils;
 
 import android.graphics.Typeface;
 import android.util.Log;

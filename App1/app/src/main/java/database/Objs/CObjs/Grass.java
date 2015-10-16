@@ -16,6 +16,7 @@ import database.ObjT.doesntTakeUpSpace;
 import database.ObjT.Squishable;
 import database.ObjT.Standable;
 import database.ObjT.Terrain;
+import database.Objs.Obj;
 import database.State;
 import Managers.GameManager;
 import shenronproductions.app1.R;
@@ -64,6 +65,19 @@ public class Grass extends CObj {
             }
         }
         super.whenRemoved();
+    }
+
+    @Override
+    public ArrayList<String> getDescription(){
+        ArrayList<String> desc = super.getDescription();
+        //remove onGround
+        desc.remove(1);
+        //remove height
+        desc.remove(1);
+        //remove width
+        desc.remove(1);
+
+        return desc;
     }
 
 }

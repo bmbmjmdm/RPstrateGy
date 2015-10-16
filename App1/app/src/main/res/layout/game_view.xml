@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Focus"
+                android:text="View"
                 android:textSize="12sp"
                 android:id="@+id/mapInfoBut"
                 android:background="@drawable/smudge_button"
@@ -313,51 +313,78 @@
                 android:id="@+id/mapInfo"
                 android:padding="5dp"
                 android:visibility="gone">
-
-                <Button
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:text="Back"
-                    android:id="@+id/infoBackBut"
-                    android:onClick="infoBack"
-                    android:background="@drawable/brush2_button"
-                    android:textColor="@color/white_text_button"
-                    android:textSize="25sp"
-                    android:paddingBottom="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"/>
-
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2">
-
-                    <ScrollView
+                    android:layout_height="match_parent"
+                    android:id="@+id/mapInfoFrame">
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">>
-                        <LinearLayout
-                            android:orientation="vertical"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:text="Back"
+                            android:id="@+id/infoBackBut"
+                            android:onClick="infoBack"
+                            android:background="@drawable/brush2_button"
+                            android:textColor="@color/white_text_button"
+                            android:textSize="25sp"
+                            android:paddingBottom="5dp"
+                            android:paddingRight="10dp"
+                            android:paddingLeft="10dp"/>
+
+
+                        <ScrollView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/mapInfoInnerScroll">
+                            </HorizontalScrollView>
+                        </ScrollView>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        android:id="@+id/mapInfoZoomed">
+                        <ImageButton
+                            android:id="@+id/mapInfoPicture"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/objectView"
-                            android:animateLayoutChanges="true"></LinearLayout>
-                    </ScrollView>
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">>
+                            android:scaleType="centerInside"
+                            android:layout_margin="0dp"
+                            android:padding="0dp"/>
                         <LinearLayout
-                            android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/typeView"
-                            android:animateLayoutChanges="true"></LinearLayout>
-                    </ScrollView>
-                </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/mapInfoButtons"></LinearLayout>
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="0dp"
+                            android:padding="0dp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:id="@+id/mapInfoDetails">
+
+                            </LinearLayout>
+
+                        </ScrollView>
+
+                    </FrameLayout>
+
+                </FrameLayout>
 
             </LinearLayout>
 

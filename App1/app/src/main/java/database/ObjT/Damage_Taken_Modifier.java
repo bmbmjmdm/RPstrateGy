@@ -43,10 +43,10 @@ public class Damage_Taken_Modifier extends ObjT {
     public ArrayList<String> getDescription(){
         ArrayList<String> desc = new ArrayList<String>();
         if(dmgTakeC < 0 || dmgTakeP < 1){
-            desc.add("<font color=#41A317>Resistant</font> &#160<font color=#000000>to  &#160</font>"+alter);
+            desc.add("<font color=#41A317>Resistant</font> &#160<font color=#000000>to  &#160"+alter+"</font>");
         }
         if (dmgTakeC > 0 || dmgTakeP > 1){
-            desc.add("<font color=#E42217>Weak</font> &#160<font color=#000000>to  &#160</font>"+alter);
+            desc.add("<font color=#E42217>Weak</font> &#160<font color=#000000>to  &#160"+alter+"</font>");
         }
 
         return desc;

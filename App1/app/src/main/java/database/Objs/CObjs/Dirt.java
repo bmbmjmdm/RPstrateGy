@@ -1,5 +1,7 @@
 package database.Objs.CObjs;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -20,12 +22,13 @@ import shenronproductions.app1.R;
 public class Dirt extends CObj {
 
     public Dirt(ArrayList<Coord> loc){
-        super(loc, -1, 0, 50, 0, 2000 /*see below*/, "Dirt");
+        super(loc, -1, 1, 50, 500, 2000 /*see below*/, "Dirt");
         types.add(new Terrain(id));
         types.add(new colorCoord(R.drawable.brown_dirt, id));
         types.add(new Standable(id));
         types.add(new Stable(id, 95));
         types.add(new Encompassing(id));
+
     }
 
 
@@ -51,6 +54,19 @@ public class Dirt extends CObj {
     @Override
     public String getFilterText(){
         return null;
+    }
+
+    @Override
+    public ArrayList<String> getDescription(){
+        ArrayList<String> desc = super.getDescription();
+        //remove onGround
+        desc.remove(1);
+        //remove height
+        desc.remove(1);
+        //remove width
+        desc.remove(1);
+
+        return desc;
     }
 }
 

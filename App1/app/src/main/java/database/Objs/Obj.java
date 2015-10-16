@@ -21,6 +21,7 @@ import database.Objs.CObjs.CObj;
 import database.Objs.PObjs.PObj;
 import database.State;
 import Managers.GameManager;
+import shenronproductions.app1.R;
 
 /**
  * Created by Dale on 12/29/2014.
@@ -192,6 +193,9 @@ public abstract class Obj implements Serializable {
     public Obj getPresentable(Coord c){
         return this;
     }
+    public Obj getPresentable(){
+        return this;
+    }
 
     public ArrayList<String> getDescription(){
         ArrayList<String> desc = new ArrayList<String>();
@@ -321,4 +325,20 @@ public abstract class Obj implements Serializable {
     }
 
     public abstract int getMovingHeight();
+
+    public int getImage(){
+        return R.drawable.cpu;//TODO
+        //TODO
+        //TODO
+    }
+
+
+    public boolean hasParent(){
+        if(parent == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 }

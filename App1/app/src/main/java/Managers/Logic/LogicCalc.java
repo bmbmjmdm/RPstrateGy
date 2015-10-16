@@ -178,6 +178,16 @@ public class LogicCalc {
         return utilityLogic.overlapping(co, z, height, x, y);
     }
 
+    public boolean overlapping(Obj co, int z){
+        UtilityLogic utilityLogic = new UtilityLogic();
+        return utilityLogic.overlapping(co, z);
+    }
+
+    public boolean overlapping(Obj co, int z, Coord c){
+        UtilityLogic utilityLogic = new UtilityLogic();
+        return utilityLogic.overlapping(co, z, c);
+    }
+
     //gets any CObj that is overlapping at +/- zLenience
     public HashSet<CObj> getCObjAround(Coord at, int zLenience){
         UtilityLogic utilityLogic = new UtilityLogic();

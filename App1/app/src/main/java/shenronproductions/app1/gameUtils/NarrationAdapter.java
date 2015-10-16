@@ -1,23 +1,14 @@
-package shenronproductions.app1.Adapters;
+package shenronproductions.app1.gameUtils;
 
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import Managers.GameManager;
 import database.Narration;
 import database.State;
-import shenronproductions.app1.R;
 import shenronproductions.app1.Activities.gameAct;
 
 /**
