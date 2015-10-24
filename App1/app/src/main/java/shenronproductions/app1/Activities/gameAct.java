@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -44,7 +43,9 @@ import Popups.ProcessPastTurn;
 import Utilities.Callable;
 import Utilities.Constants;
 import Utilities.EmptyCallable;
+import shenronproductions.app1.gameUtils.HScroll;
 import Utilities.IntObj;
+import shenronproductions.app1.gameUtils.VScroll;
 import database.Actions.ActionSteps.ActionStep;
 import database.Actions.Climb;
 import database.Actions.SubActions.SubAction;
@@ -52,8 +53,9 @@ import database.Objs.PObjs.PObj;
 import database.Requirements.Requirement;
 import shenronproductions.app1.gameUtils.ActionsAdapter;
 import Utilities.ClimbObj;
-import Utilities.FixedGridLayoutManager;
+import shenronproductions.app1.gameUtils.FixedGridLayoutManager;
 import shenronproductions.app1.gameUtils.AlertAdapter;
+import shenronproductions.app1.gameUtils.CoordHolder;
 import shenronproductions.app1.gameUtils.NarrationAdapter;
 import Utilities.RemovedException;
 import Utilities.Stat;
@@ -146,6 +148,10 @@ public class gameAct extends Activity {
     //used by viewGrid for breaking up or putting together obj
     public HashMap<Integer, Boolean> showParent = new HashMap<>();
     public HashMap<Integer, Boolean> showSelf = new HashMap<>();
+    //used by viewGrid for breaking up or putting together obj while viewing parent obj
+    public HashMap<Integer, Boolean> showParentPOBJ = new HashMap<>();
+    public HashMap<Integer, Boolean> showSelfPOBJ = new HashMap<>();
+    public boolean inPOBJ = false;
 
 
 
@@ -192,6 +198,23 @@ public class gameAct extends Activity {
         layoutMan.setMinScrollSpeed(-90);
         gameMap.setLayoutManager(layoutMan);
         gameMap.setAdapter(new StateAdapter());
+
+
+        //give map info grid scrollability
+        findViewById(R.id.mapInfoScroller).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return scrollDiagnalGrid(motionEvent, false);
+            }
+        });
+
+        //give map info grid scrollability
+        findViewById(R.id.actionsInScroller).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return scrollDiagnalGrid(motionEvent, true);
+            }
+        });
 
 
         //format actionInput view
@@ -311,8 +334,11 @@ public class gameAct extends Activity {
     public void newTurnPhase(boolean processPastTurn){
 
         findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
-        HashMap<Integer, Boolean> showParent = new HashMap<>();
-        HashMap<Integer, Boolean> showSelf = new HashMap<>();
+        showParent = new HashMap<>();
+        showSelf = new HashMap<>();
+        showParentPOBJ = new HashMap<>();
+        showSelfPOBJ = new HashMap<>();
+        inPOBJ = false;
 
         updatePresetFilters();
 
@@ -627,14 +653,17 @@ public class gameAct extends Activity {
             return dispatchTouch.call();
     }
 
-    public void updateCoords(Set<Coord> these){
+    public void updateCoords(Set<Coord> these, boolean highlighting){
         if(!noUpdateMap) {
             State s = GameManager.getInstance().getState();
             for (Coord c : these) {
                 int position = s.coordToPosition(c);
                 RecyclerView.ViewHolder vh = gameMap.findViewHolderForAdapterPosition(position);
                 if(vh != null) {
-                    gameMap.getAdapter().bindViewHolder(vh, position);
+                    StateAdapter sa = (StateAdapter) gameMap.getAdapter();
+                    sa.isHighlighting = true;
+                    sa.bindViewHolder((CoordHolder) vh, position);
+                    sa.isHighlighting = false;
                 }
             }
         }
@@ -1045,6 +1074,7 @@ public class gameAct extends Activity {
 
 
     public void setObjects(Narration n){
+        inPOBJ = false;
         findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(n);
         unHighlightCoords(curHighlighted);
@@ -1058,12 +1088,13 @@ public class gameAct extends Activity {
 
         }
 
-        viewGrid gridBuilder = new viewGrid(objs, true, true);
-        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
+        viewGrid gridBuilder = new viewGrid(objs, false, false);
+        gridBuilder.addToView();
     }
 
 
     public void setObjects(Coord c){
+        inPOBJ = false;
         findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(c);
         HashSet<Coord> coords = new HashSet<Coord>();
@@ -1079,12 +1110,13 @@ public class gameAct extends Activity {
                 objs.add(co);
             }
         }
-        viewGrid gridBuilder = new viewGrid(objs, c, true, true);
-        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
+        viewGrid gridBuilder = new viewGrid(objs, c, false, false);
+        gridBuilder.addToView();
     }
 
 
     public void setObjects(final Obj po){
+        inPOBJ = true;
         findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(po);
         HashSet<Coord> coords = getHighlightableCoords(po);
@@ -1111,8 +1143,77 @@ public class gameAct extends Activity {
         }
 
 
-        viewGrid gridBuilder = new viewGrid(objs, true, true);
-        gridBuilder.addToView(((HorizontalScrollView) findViewById(R.id.mapInfoInnerScroll)));
+        viewGrid gridBuilder = new viewGrid(objs, false, false);
+        gridBuilder.addToView();
+    }
+
+
+    //this allows for diagnal scrolling
+    private float mx, my;
+    private int scrollBy = 0;
+    private boolean scrollDiagnalGrid(MotionEvent motionEvent, boolean action) {
+        float curX, curY;
+
+        ScrollView vScroll;
+        HorizontalScrollView hScroll;
+        if(action){
+            vScroll = (VScroll) findViewById(R.id.actionsInOuterScroll);
+            hScroll = (HScroll) findViewById(R.id.actionsInInnerScroll);
+        }
+        else{
+            vScroll = (VScroll) findViewById(R.id.mapInfoOuterScroll);
+            hScroll = (HScroll) findViewById(R.id.mapInfoInnerScroll);
+        }
+
+        View gridView = hScroll.getChildAt(0);
+
+        switch (motionEvent.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+                mx = motionEvent.getX();
+                my = motionEvent.getY();
+                scrollBy = 0;
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                curX = motionEvent.getX();
+                curY = motionEvent.getY();
+                float newX = mx-curX;
+                float newY = my-curY;
+                vScroll.scrollBy((int) newX, (int) newY);
+                hScroll.scrollBy((int) newX, (int) newY);
+                scrollBy += Math.max(Math.abs(newX), Math.abs(newY));
+                mx = curX;
+                my = curY;
+                return true;
+            case MotionEvent.ACTION_UP:
+                curX = motionEvent.getX();
+                curY = motionEvent.getY();
+                vScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+                hScroll.scrollBy((int) (mx - curX), (int) (my - curY));
+
+                //this is needed to process click events and send them to the proper element, since otherwise they would be eaten by the scroller
+                if(gridView != null) {
+                    if(scrollBy < 20) {
+                        float xOffset = Math.max(hScroll.getScrollX(), 0);
+                        float yOffset = Math.max(vScroll.getScrollY(), 0);
+
+                        MotionEvent firstDown = MotionEvent.obtain(motionEvent);
+                        firstDown.setAction(MotionEvent.ACTION_DOWN);
+                        firstDown.offsetLocation(xOffset, yOffset);
+
+                        MotionEvent thenUp = MotionEvent.obtain(motionEvent);
+                        thenUp.offsetLocation(xOffset, yOffset);
+
+                        gridView.dispatchTouchEvent(firstDown);
+                        gridView.dispatchTouchEvent(thenUp);
+                    }
+                }
+                return true;
+        }
+
+        return false;
+
+
     }
 /*
     //this should only be called from setObjects
@@ -1653,14 +1754,13 @@ public class gameAct extends Activity {
         HashSet<Coord> oldCoords = new HashSet<>(coords);
         curHighlighted.removeAll(coords);
 
-
-        updateCoords(oldCoords);
+        updateCoords(oldCoords, true);
     }
 
     public void highlightCoords(HashSet<Coord> coords) {
         unHighlightCoords(curHighlighted);
         curHighlighted.addAll(coords);
-        updateCoords(coords);
+        updateCoords(coords, true);
     }
 
     public void actionUnHighlightCoordsAll() {
@@ -1673,46 +1773,46 @@ public class gameAct extends Activity {
         actionHighlightedGreen.clear();
         actionHighlightedRed.clear();
 
-        updateCoords(coords);
+        updateCoords(coords, true);
     }
 
     public void actionUnHighlightCoordsWhite(Set<Coord> coords) {
         HashSet<Coord> oldCoords = new HashSet<>(coords);
         actionHighlightedWhite.removeAll(coords);
 
-        updateCoords(oldCoords);
+        updateCoords(oldCoords, true);
     }
 
     public void actionHighlightCoordsWhite(Set<Coord> coords) {
         actionUnHighlightCoordsWhite(actionHighlightedWhite);
         actionHighlightedWhite.addAll(coords);
-        updateCoords(coords);
+        updateCoords(coords, true);
     }
 
     public void actionUnHighlightCoordsRed(Set<Coord> coords) {
         HashSet<Coord> oldCoords = new HashSet<>(coords);
         actionHighlightedRed.removeAll(coords);
 
-        updateCoords(oldCoords);
+        updateCoords(oldCoords, true);
     }
 
     public void actionHighlightCoordsRed(Set<Coord> coords) {
         actionUnHighlightCoordsRed(actionHighlightedRed);
         actionHighlightedRed.addAll(coords);
-        updateCoords(coords);
+        updateCoords(coords, true);
     }
 
     public void actionUnHighlightCoordsGreen(Set<Coord> coords) {
         HashSet<Coord> oldCoords = new HashSet<>(coords);
         actionHighlightedGreen.removeAll(coords);
 
-        updateCoords(oldCoords);
+        updateCoords(oldCoords, true);
     }
 
     public void actionHighlightCoordsGreen(Set<Coord> coords) {
         actionUnHighlightCoordsGreen(actionHighlightedGreen);
         actionHighlightedGreen.addAll(coords);
-        updateCoords(coords);
+        updateCoords(coords, true);
     }
 
 
@@ -1787,7 +1887,7 @@ public class gameAct extends Activity {
         allHighlighted.addAll(actionHighlightedWhite);
         allHighlighted.addAll(actionHighlightedRed);
         allHighlighted.addAll(curHighlighted);
-        updateCoords(allHighlighted);
+        updateCoords(allHighlighted, true);
     }
 
 
@@ -2138,6 +2238,7 @@ public class gameAct extends Activity {
         showActInput();
 
         ((LinearLayout) findViewById(R.id.actInOptions)).removeAllViews();
+        ((HorizontalScrollView) findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         ((TextView) findViewById(R.id.actInInfo)).setText("");
 
         actionUnHighlightCoordsAll();

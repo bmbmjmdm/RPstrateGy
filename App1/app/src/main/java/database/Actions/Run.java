@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -184,6 +185,7 @@ public class Run extends Action{
             context.actionTakesMapClick = true;
             curSelected =  -404;
             ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+            ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LogicCalc lc = new LogicCalc();
             curC = u.getMiddlemostCoord();
 
@@ -261,6 +263,7 @@ public class Run extends Action{
             GameManager gm = GameManager.getInstance();
             final gameAct context = gm.getGameAct();
             ((TextView) context.findViewById(R.id.actInInfo)).setText("Do you want to run up or down?");
+            ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LinearLayout options = ((LinearLayout) context.findViewById(R.id.actInOptions));
             options.removeAllViews();
 
@@ -438,6 +441,7 @@ public class Run extends Action{
     /******************************************************************************************************* UI MENUS BUTTONS ***********************************************/
 
     private void makeOptions(HashSet<ClimbObj> applicants, final Coord c, final gameAct context){
+        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
         LinearLayout twoLists = new LinearLayout(context);
         twoLists.setOrientation(LinearLayout.HORIZONTAL);

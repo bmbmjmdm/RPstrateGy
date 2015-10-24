@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -83,6 +84,7 @@ public class Wait extends Action {
         final GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
         ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
 
 
         ((TextView) context.findViewById(R.id.actInInfo)).setText("Enter a max number of milliseconds to wait. While waiting, you can click the screen to stop waiting at any moment!");

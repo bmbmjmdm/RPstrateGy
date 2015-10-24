@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -158,6 +159,7 @@ public class Bite extends Action{
             context.actionTakesMapClick = true;
             curSelected =  -404;
             ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+            ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LogicCalc lc = new LogicCalc();
 
 
@@ -491,6 +493,7 @@ public class Bite extends Action{
 
 
     private void makeOptions(HashSet<CObj> applicants, final Coord c, final gameAct context){
+        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
         LinearLayout twoLists = new LinearLayout(context);
         twoLists.setOrientation(LinearLayout.HORIZONTAL);

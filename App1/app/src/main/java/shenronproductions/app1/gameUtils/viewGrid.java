@@ -36,6 +36,7 @@ import Managers.GameManager;
 import Managers.Logic.LogicCalc;
 import Utilities.Callable;
 import Utilities.IntObj;
+import Utilities.NameObjCallable;
 import database.Coord;
 import database.Objs.CObjs.CObj;
 import database.Objs.Obj;
@@ -55,7 +56,8 @@ public class viewGrid {
     HashMap<Integer, Integer> leftMostFreeSlotByZ;
     HashMap<Coord, Boolean> usedSpots;
     gameAct gc = GameManager.getInstance().getGameAct();
-    boolean findAllChildren;
+    boolean action;
+    boolean onlyShowSelf;
 
     //the collection passed is unmodified, it is purely the obj the caller wants to display
     //masterView is where the grid is being added
@@ -63,16 +65,18 @@ public class viewGrid {
 
 
     //this is for no particular coordinate, which is when we can have obj
-    public viewGrid(Collection<Obj> allObj, boolean checkPresentable, boolean findAll){
-        fillMap(allObj, checkPresentable);
-        findAllChildren = findAll;
+    public viewGrid(Collection<Obj> allObj, boolean onlySelf, boolean act){
+        fillMap(allObj);
+        action = act;
+        onlyShowSelf = onlySelf;
     }
 
 
     //same as above, but x/y positioning matters for allObj so we know they are all CObj (though can still belong to an Obj)
-    public viewGrid(Collection<CObj> allObj, Coord c, boolean checkPresentable, boolean findAll) {
-        fillMap(allObj, c, checkPresentable);
-        findAllChildren = findAll;
+    public viewGrid(Collection<CObj> allObj, Coord c, boolean onlySelf, boolean act) {
+        fillMap(allObj, c);
+        action = act;
+        onlyShowSelf = onlySelf;
     }
 
 
@@ -87,11 +91,11 @@ public class viewGrid {
 
 
 
-    private void fillMap(Collection<Obj> allObj, boolean checkPresentable) {
+    private void fillMap(Collection<Obj> allObj) {
         //get the obj representation of all Obj (aka person vs bodypart, etc) if usePresentable is set
         Collection<Obj> newObj = new HashSet<Obj>();
-        for (Obj co : newObj) {
-            newObj.add(getMapPresentable(co, checkPresentable));
+        for (Obj co : allObj) {
+            newObj.add(getMapPresentable(co));
         }
 
         allObj = newObj;
@@ -117,11 +121,11 @@ public class viewGrid {
 
 
 
-    private void fillMap(Collection<CObj> allCObj, Coord c, boolean checkPresentable){
+    private void fillMap(Collection<CObj> allCObj, Coord c){
         //get the obj representation of all CObj (aka person vs bodypart, etc)
         Collection<Obj> allObj = new HashSet<Obj>();
         for(CObj co: allCObj){
-            allObj.add(getMapPresentable(co, c, checkPresentable));
+            allObj.add(getMapPresentable(co, c));
         }
 
         prepGrid(allObj);
@@ -143,55 +147,86 @@ public class viewGrid {
     }
 
     //not sure if this should be recursive or not
-    private Obj getMapPresentable(Obj o, Coord c, boolean checkPresentable){
+    private Obj getMapPresentable(Obj o, Coord c){
+        //this is sometimes the case for actions
+        if(onlyShowSelf){
+            return o;
+        }
+
         //check to see if we force the parent
-        Boolean showParent = gc.showParent.get(o.id);
-        if(showParent != null){
-            if(showParent){
-                return o.parent;
-            }
+        if (showParent(o)) {
+            return o.parent;
         }
 
         //check to see if we force self
-        Boolean showSelf = gc.showSelf.get(o.id);
-        if(showSelf != null){
-            if(showSelf){
-                return o;
-            }
-        }
-
-        if(checkPresentable) {
-            return o.getPresentable(c);
-        }
-        else{
+        if (showSelf(o)) {
             return o;
         }
+
+        return o.getPresentable(c);
     }
 
     //not sure if this should be recursive or not
-    private Obj getMapPresentable(Obj o, boolean checkPresentable){
+    private Obj getMapPresentable(Obj o){
+        //this is sometimes the case for actions
+        if(onlyShowSelf){
+            return o;
+        }
+
         //check to see if we force the parent
-        Boolean showParent = gc.showParent.get(o.id);
-        if(showParent != null){
-            if(showParent){
-                return o.parent;
-            }
+        if (showParent(o)) {
+            return o.parent;
         }
 
         //check to see if we force self
-        Boolean showSelf = gc.showSelf.get(o.id);
-        if(showSelf != null){
-            if(showSelf){
-                return o;
+        if (showSelf(o)) {
+            return o;
+        }
+
+        return o.getPresentable();
+    }
+
+
+    private boolean showParent(Obj o){
+        //check to see if we force the parent
+        Boolean showParent;
+        //currently in viewing pobj mode
+        if(gc.inPOBJ){
+            showParent = gc.showParentPOBJ.get(o.id);
+        }
+        //not view pobj
+        else{
+            showParent = gc.showParent.get(o.id);
+        }
+
+        if(showParent != null){
+            if(showParent){
+                return true;
             }
         }
 
-        if(checkPresentable) {
-            return o.getPresentable();
+        return false;
+    }
+
+    private boolean showSelf(Obj o){
+        //check to see if we force the self
+        Boolean showSelf;
+        //currently in viewing pobj mode
+        if(gc.inPOBJ){
+            showSelf = gc.showSelfPOBJ.get(o.id);
         }
+        //not view pobj
         else{
-            return o;
+            showSelf = gc.showSelf.get(o.id);
         }
+
+        if(showSelf != null){
+            if(showSelf){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -209,7 +244,9 @@ public class viewGrid {
 
         //determine all the brackets there are, based on the z coordinate of every obj
         for(Obj o: allObj){
-            objByZ.put(o.getLowestZ(), new HashSet<Obj>());
+            for(Coord c: o.getAllCoords()) {
+                objByZ.put(c.z, new HashSet<Obj>());
+            }
         }
     }
 
@@ -227,9 +264,11 @@ public class viewGrid {
         if(allHeights.isEmpty())
             return;
 
+
         //otherwise, get the first set to start with
         int curHeight = allHeights.get(0);
         HashSet<Obj> lastSet = objByZ.get(curHeight);
+        int lastHeight = curHeight;
 
         //for every height in the map
         for(int i = 1; i < allHeights.size() ; i++){
@@ -240,13 +279,19 @@ public class viewGrid {
 
             if(nextSet.containsAll(lastSet)){
                 //the nextSet contains all of the previous set, meaning it has more members and should remove the previous set from the map
-                objByZ.remove(curHeight);
+                objByZ.remove(lastHeight);
             }
 
-            //we DO NOT NEED TO see if lastSet contains all of nextSet, as the nextSet MUST HAVE HAD a new element in order to have existed as a seperate z in the first place!
+            else if(lastSet.containsAll(nextSet)){
+                //the nextSet contains all of this new set, meaning it has more members and should remove the next set from the map
+                objByZ.remove(curHeight);
+                //update these to act like the last set was this one to process
+                nextSet = lastSet;
+                curHeight = lastHeight;
+
+            }
 
             else{
-                int lastHeight = allHeights.get(i-1);
                 //the last set is unique, so tell all of its members they exist in it via the new map
                 for(Obj o: lastSet){
                     HashSet<Integer> oLoc = zByObj.get(o.id);
@@ -259,6 +304,7 @@ public class viewGrid {
 
             //go on to the next
             lastSet = nextSet;
+            lastHeight = curHeight;
         }
 
         //the last set is by default unique, so tell all of its members they exist in it via the new map
@@ -269,6 +315,7 @@ public class viewGrid {
             oLoc.add(curHeight);
             zByObj.put(o.id, oLoc);
         }
+
     }
 
 
@@ -287,7 +334,20 @@ public class viewGrid {
 
 
 
-    public void addToView(HorizontalScrollView masterView){
+    //if onlyCheckChild = false and there are 1+ buttons:
+        //the obj being passed to the buttons COULD BE a RELATIVE (parent or child) of one of the original obj passed to viewGrid during init
+            //handle appropriately whenever making the callables for this
+    public void addToView(NameObjCallable... buttons){
+        HorizontalScrollView masterView;
+
+        //the master view is dependant on whether this is for map info or action input
+        if(action) {
+            masterView = (HorizontalScrollView) gc.findViewById(R.id.mapInfoInnerScroll);
+        }
+        else{
+            masterView = (HorizontalScrollView) gc.findViewById(R.id.actionsInInnerScroll);
+        }
+
         masterView.removeAllViews();
 
         leftMostFreeSlotByZ = new HashMap<>();
@@ -331,7 +391,7 @@ public class viewGrid {
                         drawn.put(o.id, true);
                         //create this object as a button and add it to the grid
                         //this will also update the placement hashmaps
-                        getButton(o, index, existsOn.size(), myGrid);
+                        getButton(o, index, existsOn.size(), myGrid, buttons);
                     }
                 }
 
@@ -360,7 +420,7 @@ public class viewGrid {
 
                     //create this object as a button and add it to the grid
                     //this will also update the placement hashmaps
-                    getButton(o, index, 1, myGrid);
+                    getButton(o, index, 1, myGrid, buttons);
                 }
             }
         }
@@ -371,22 +431,16 @@ public class viewGrid {
 
 
 
-    private void getButton(final Obj o, final int row, final int span, GridLayout grid){
+    private void getButton(final Obj o, final int row, final int span, GridLayout grid, final NameObjCallable... buttons){
         final int column = getColumnUpdateMaps(row, span);
         final int marginsPadding = 4;
         final int dimensions = 87;
         final int marginsHor = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, marginsPadding, gc.getResources().getDisplayMetrics());
         final int marginsVert = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, marginsPadding, gc.getResources().getDisplayMetrics());
+
         final int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (dimensions-(marginsPadding*2)), gc.getResources().getDisplayMetrics());
         final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (dimensions*span - marginsPadding*2), gc.getResources().getDisplayMetrics());
         final int image = o.getImage();
-
-
-        //padding equal to margines, center the image inside the button with max size while mantaining apsect ratio
-        final ImageButton container = new ImageButton(gc);
-        container.setPadding(marginsHor, marginsVert, marginsHor, marginsVert);
-        container.setImageDrawable(gc.getResources().getDrawable(image));
-        container.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
 
         //small horizontal margins and large vertical margins, set constant width and constant height*span, supply row and column index
@@ -403,18 +457,24 @@ public class viewGrid {
         layoutParams.width = width;
         layoutParams.setMargins(marginsHor, marginsVert, marginsHor, marginsVert);
 
+        //padding equal to margines, center the image inside the button with max size while mantaining apsect ratio
+        final ImageButton container = new ImageButton(gc);
+        container.setLayoutParams(layoutParams);
+        container.setPadding(marginsHor, marginsVert, marginsHor, marginsVert);
+        container.setImageDrawable(gc.getResources().getDrawable(image));
+        container.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         //set up zoom in function
         container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                zoomInOnObj(container, image, o);
+                zoomInOnObj(container, image, o, buttons);
             }
         });
 
 
         //add to grid
-        grid.addView(container, layoutParams);
+        grid.addView(container);
 
     }
 
@@ -519,7 +579,7 @@ public class viewGrid {
 
     AnimatorSet mCurrentAnimator = null;
 
-    private void zoomInOnObj(final View thumbView, int imageId, final Obj o) {
+    private void zoomInOnObj(final View thumbView, int imageId, final Obj o, NameObjCallable... buttons) {
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         if (mCurrentAnimator != null) {
@@ -527,16 +587,36 @@ public class viewGrid {
         }
 
         // Load the high-resolution "zoomed-in" image.
-        final ImageButton imageInFrame = (ImageButton) gc.findViewById(R.id.mapInfoPicture);
+        final ImageButton imageInFrame;
+        if(action){
+            imageInFrame =  (ImageButton) gc.findViewById(R.id.actionsInPicture);
+        }
+        else{
+            imageInFrame =  (ImageButton) gc.findViewById(R.id.mapInfoPicture);
+        }
+
         imageInFrame.setImageResource(imageId);
 
         // Add the details to the detail list/grid
-        final LinearLayout detailsGrid = (LinearLayout) gc.findViewById(R.id.mapInfoDetails);
+        final LinearLayout detailsGrid;
+        if(action){
+            detailsGrid = (LinearLayout) gc.findViewById(R.id.actionsInDetails);
+        }
+        else{
+            detailsGrid = (LinearLayout) gc.findViewById(R.id.mapInfoDetails);
+        }
+
         detailsGrid.removeAllViews();
 
 
         //get the zoomed in frame as a whole and begin morphing
-        final FrameLayout expandedImageView = (FrameLayout) gc.findViewById(R.id.mapInfoZoomed);
+        final FrameLayout expandedImageView;
+        if(action){
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.actionsInZoomed);
+        }
+        else{
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.mapInfoZoomed);
+        }
 
         // Calculate the starting and ending bounds for the zoomed-in image.
         // This step involves lots of math. Yay, math.
@@ -550,8 +630,15 @@ public class viewGrid {
         // bounds, since that's the origin for the positioning animation
         // properties (X, Y).
         thumbView.getGlobalVisibleRect(startBounds);
-        gc.findViewById(R.id.mapInfoFrame)
-                .getGlobalVisibleRect(finalBounds, globalOffset);
+        View frame;
+        if(action){
+            frame = gc.findViewById(R.id.actionsInputFrame);
+        }
+        else{
+            frame = gc.findViewById(R.id.mapInfoFrame);
+        }
+
+        frame.getGlobalVisibleRect(finalBounds, globalOffset);
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
 
@@ -609,6 +696,7 @@ public class viewGrid {
                 mCurrentAnimator = null;
 
                 //highlight observed obj's coords
+
                 gc.highlightCoords(gc.getHighlightableCoords(o));
             }
 
@@ -688,13 +776,13 @@ public class viewGrid {
             }
         });
 
-        fillDetails(o, detailsGrid);
+        fillDetails(o, detailsGrid, buttons);
     }
 
 
 
 
-    private void fillDetails(final Obj o, LinearLayout detailsGrid) {
+    private void fillDetails(final Obj o, LinearLayout detailsGrid, NameObjCallable... buttons) {
         ArrayList<String> description = o.getDescription();
         int sp12 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, gc.getResources().getDisplayMetrics());
         int wrap = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -703,103 +791,135 @@ public class viewGrid {
         int dp50 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, gc.getResources().getDisplayMetrics());
         int dp300 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, gc.getResources().getDisplayMetrics());
         Typeface font = Typeface.createFromAsset(gc.getAssets(), "njnaruto.ttf");
+        final HashMap<Integer, Boolean> showParent;
+        final HashMap<Integer, Boolean> showSelf;
+        if(gc.inPOBJ){
+            showParent = gc.showParentPOBJ;
+            showSelf = gc.showSelfPOBJ;
+        }
+        else{
+            showParent = gc.showParent;
+            showSelf = gc.showSelf;
+        }
 
 
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(dp300, dp50);
         buttonParams.gravity = Gravity.CENTER_HORIZONTAL;
         buttonParams.setMargins(0, 0, 0, dp7);
 
-        //set up buttons to break up a parent into its children
-        if(o.isParent()){
-            //first the button to break it up
-            Button breakUp = new Button(gc);
-            breakUp.setTypeface(font);
-            breakUp.setTextSize(sp12);
-            breakUp.setText("View As Parts");
-            breakUp.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
-            breakUp.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
-            breakUp.setOnClickListener(new View.OnClickListener() {
+        //setup all buttons we were given
+        for(final NameObjCallable noC: buttons){
+            Button but = new Button(gc);
+            but.setTypeface(font);
+            but.setTextSize(sp12);
+            but.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
+            but.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
+            but.setText(noC.name);
+            but.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    //for all my childen
-                    for(IntObj io: ((PObj) o).getChildren()){
-                        Obj co = io.o;
-                        //make them not want to insist on showing me
-                        gc.showParent.put(co.id, false);
-                        //and make them insist on showing themselves
-                        gc.showSelf.put(co.id, true);
-                    }
-                    //refresh
-                    gc.updateInfo();
-
+                    noC.oc.call(o);
                 }
             });
 
-            detailsGrid.addView(breakUp, buttonParams);
+            detailsGrid.addView(but, buttonParams);
+        }
 
-            //things like actions dont want you to find all children seeable
-            if(findAllChildren) {
-                //next the button to find all children
-                Button findAll = new Button(gc);
-                findAll.setTypeface(font);
-                findAll.setTextSize(sp12);
-                findAll.setText("Find All Parts");
-                findAll.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
-                findAll.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
-                findAll.setOnClickListener(new View.OnClickListener() {
+
+
+        if(!onlyShowSelf) {
+
+            //set up buttons to break up a parent into its children
+            if (o.isParent()) {
+                //first the button to break it up
+                Button breakUp = new Button(gc);
+                breakUp.setTypeface(font);
+                breakUp.setTextSize(sp12);
+                breakUp.setText("View As Parts");
+                breakUp.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
+                breakUp.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
+                breakUp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         //for all my childen
-                        for(IntObj io: ((PObj) o).getChildren()){
+                        for (IntObj io : ((PObj) o).getChildren()) {
                             Obj co = io.o;
                             //make them not want to insist on showing me
-                            gc.showParent.put(co.id, false);
+                            showParent.put(co.id, false);
                             //and make them insist on showing themselves
-                            gc.showSelf.put(co.id, true);
+                            showSelf.put(co.id, true);
                         }
-                        //now view parent
-                        gc.setObjects(o);
+                        //refresh
+                        gc.updateInfo();
+
                     }
                 });
 
+                detailsGrid.addView(breakUp, buttonParams);
 
-                detailsGrid.addView(findAll, buttonParams);
+                //things like actions dont want you to find all children seeable
+                if (!action) {
+                    //next the button to find all children
+                    Button findAll = new Button(gc);
+                    findAll.setTypeface(font);
+                    findAll.setTextSize(sp12);
+                    findAll.setText("Find All Parts");
+                    findAll.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
+                    findAll.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
+                    findAll.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //for all my childen
+                            for (IntObj io : ((PObj) o).getChildren()) {
+                                Obj co = io.o;
+                                //make them not want to insist on showing me
+                                gc.showParentPOBJ.put(co.id, false);
+                                //and make them insist on showing themselves
+                                gc.showSelfPOBJ.put(co.id, true);
+                            }
+                            //now view parent
+                            gc.setObjects(o);
+                        }
+                    });
+
+
+                    detailsGrid.addView(findAll, buttonParams);
+                }
+            }
+
+
+            //set up button to consolidate child into parent
+            if (o.hasParent()) {
+                //next the button to find all children
+                Button viewWhole = new Button(gc);
+                viewWhole.setTypeface(font);
+                viewWhole.setTextSize(sp12);
+                viewWhole.setText("View As Whole");
+                viewWhole.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
+                viewWhole.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
+                viewWhole.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        PObj parent = o.parent;
+                        //for me and all my siblings
+                        for (IntObj io : parent.getChildren()) {
+                            Obj co = io.o;
+                            //make them want to show their parent instead of showing self
+                            showParent.put(co.id, true);
+                            //and make them not insist on showing themselves by default either
+                            showSelf.put(co.id, false);
+                        }
+                        gc.updateInfo();
+
+                    }
+                });
+
+                detailsGrid.addView(viewWhole, buttonParams);
             }
         }
-
-
-        //set up button to consolidate child into parent
-        if(o.hasParent()){
-            //next the button to find all children
-            Button viewWhole = new Button(gc);
-            viewWhole.setTypeface(font);
-            viewWhole.setTextSize(sp12);
-            viewWhole.setText("View As Whole");
-            viewWhole.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
-            viewWhole.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
-            viewWhole.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    PObj parent = (PObj) o.parent;
-                    //for me and all my siblings
-                    for(IntObj io: parent.getChildren()){
-                        Obj co = io.o;
-                        //make them want to show their parent instead of showing self
-                        gc.showParent.put(co.id, true);
-                        //and make them not insist on showing themselves by default either
-                        gc.showSelf.put(co.id, false);
-                    }
-                    gc.updateInfo();
-
-                }
-            });
-
-            detailsGrid.addView(viewWhole, buttonParams);
-        }
-
 
 
         //the first detail has a large margin to keep it away from the buttons or top

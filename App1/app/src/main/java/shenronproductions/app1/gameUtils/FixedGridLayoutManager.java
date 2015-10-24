@@ -1,4 +1,4 @@
-package Utilities;
+package shenronproductions.app1.gameUtils;
 
 import android.content.Context;
 import android.graphics.PointF;

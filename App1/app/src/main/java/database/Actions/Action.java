@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -185,7 +186,7 @@ public abstract class Action implements Serializable {
                 if(needsAskToContinue){
 
                     //create 2 buttons
-                    ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+                    ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
 
                     ((TextView) context.findViewById(R.id.actInInfo)).setText("Do you want to use " + name +" again?");
                     LinearLayout options = ((LinearLayout) context.findViewById(R.id.actInOptions));

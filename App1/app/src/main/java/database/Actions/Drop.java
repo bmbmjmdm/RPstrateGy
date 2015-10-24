@@ -1,6 +1,7 @@
 package database.Actions;
 
 import android.util.Log;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -109,6 +110,7 @@ public class Drop extends Action {
             context.actionTakesMapClick = true;
             curSelected = null;
             ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+            ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LogicCalc lc = new LogicCalc();
 
 

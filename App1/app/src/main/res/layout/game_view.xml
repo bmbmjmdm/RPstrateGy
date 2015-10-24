@@ -337,16 +337,29 @@
                             android:paddingLeft="10dp"/>
 
 
-                        <ScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <HorizontalScrollView
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <shenronproductions.app1.gameUtils.VScroll
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/mapInfoInnerScroll">
-                            </HorizontalScrollView>
-                        </ScrollView>
+                                android:id="@+id/mapInfoOuterScroll">
+                                <shenronproductions.app1.gameUtils.HScroll
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/mapInfoInnerScroll">
+                                </shenronproductions.app1.gameUtils.HScroll>
+                            </shenronproductions.app1.gameUtils.VScroll>
+
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/mapInfoScroller"></RelativeLayout>
+                        </FrameLayout>
+
                     </LinearLayout>
+
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -536,7 +549,12 @@
                         android:id="@+id/actionsInput"
                         android:padding="5dp"
                         android:visibility="gone">
-                        <ScrollView
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/actionsInputFrame">
+                        <NestedScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -561,6 +579,97 @@
                                     android:id="@+id/actInOptions"
                                     android:layout_marginTop="10dp"/>
 
+
+
+
+
+                                <!--Actions input grid viewer-->
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical">
+
+
+                                        <FrameLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+                                            <Utilities.VScroll
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:id="@+id/actionsInOuterScroll">
+                                                <Utilities.HScroll
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:id="@+id/actionsInInnerScroll">
+                                                </Utilities.HScroll>
+                                            </Utilities.VScroll>
+
+
+                                            <RelativeLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:id="@+id/actionsInScroller"></RelativeLayout>
+                                        </FrameLayout>
+
+                                    </LinearLayout>
+
+
+                                    <FrameLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:visibility="invisible"
+                                        android:layout_margin="0dp"
+                                        android:padding="0dp"
+                                        android:id="@+id/actionsInZoomed">
+                                        <ImageButton
+                                            android:id="@+id/actionsInPicture"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:scaleType="centerInside"
+                                            android:layout_margin="0dp"
+                                            android:padding="0dp"/>
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical"
+                                            android:id="@+id/actionsInButtons"></LinearLayout>
+                                        <ScrollView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:padding="0dp">
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="vertical"
+                                                android:id="@+id/actionsInDetails">
+
+                                            </LinearLayout>
+
+                                        </ScrollView>
+
+                                    </FrameLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 <Button
                                     android:layout_width="300dp"
                                     android:layout_height="45dp"
@@ -575,8 +684,9 @@
 
                             </LinearLayout>
 
-                        </ScrollView>
+                        </NestedScrollView>
 
+                        </FrameLayout>
                     </LinearLayout>
 
 

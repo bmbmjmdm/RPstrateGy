@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -150,7 +151,7 @@ public class Sneak extends Action{
             }
 
             //make option to stop/start sneaking
-            ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+            ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
 
             ((TextView) context.findViewById(R.id.actInInfo)).setText(infoText);
             LinearLayout options = ((LinearLayout) context.findViewById(R.id.actInOptions));

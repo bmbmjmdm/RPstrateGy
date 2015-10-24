@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -139,7 +140,7 @@ public class Climb extends Action{
         GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
         curSelected = -404;
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         canMoveTo = new HashMap<>();
 
         ((TextView) context.findViewById(R.id.actInInfo)).setText("Do you want to climb up or down?");
@@ -321,6 +322,7 @@ public class Climb extends Action{
 
     private void makeOptions(HashSet<ClimbObj> applicants, final Coord c, final gameAct context){
         ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
+        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         LinearLayout twoLists = new LinearLayout(context);
         twoLists.setOrientation(LinearLayout.HORIZONTAL);
         twoLists.setWeightSum(2);

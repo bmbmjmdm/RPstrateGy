@@ -1,6 +1,7 @@
 package shenronproductions.app1.gameUtils;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import shenronproductions.app1.Activities.gameAct;
 public class StateAdapter extends RecyclerView.Adapter<CoordHolder> {
 
     private gameAct mContext;
+    public boolean isHighlighting = false;
 
     public StateAdapter() {
         GameManager gm = GameManager.getInstance();
@@ -48,10 +50,19 @@ public class StateAdapter extends RecyclerView.Adapter<CoordHolder> {
 
     @Override
     public void onBindViewHolder(CoordHolder coordHold, int i) {
-        State s = GameManager.getInstance().getState();
-        final Coord c = s.positionToCoord(i);
+        //we do not update buttons that are already set
+        if(coordHold.isSet != null){
+            if(!isHighlighting) {
+                if(coordHold.isSet == i) {
+                    return;
+                }
+            }
+        }
+
         Button b = (Button) coordHold.itemView;
+        State s = GameManager.getInstance().getState();
         ArrayList<StringInt> textList = new ArrayList<StringInt>();
+        final Coord c = s.positionToCoord(i);
 
         //when processing, there are some CoordHolders that go over the state bounds, which should be black
         if(mContext.processing){
@@ -64,71 +75,80 @@ public class StateAdapter extends RecyclerView.Adapter<CoordHolder> {
 
         //TODO fix this so it doesnt need synchronized
         synchronized (mContext.visionLock) {
-            TreeSet<CObj> os = s.getObjC(c);
+
+            //if the coord holder has never been set before or is set incorrectly, set it up with text and a default beackground
+            if((coordHold.isSet == null) || (coordHold.isSet != i)) {
+                TreeSet<CObj> os = s.getObjC(c);
+                boolean needsColor = true;
+                boolean outOfSight = true;
 
 
-            boolean needsColor = true;
-            boolean isHighlighted = false;
-            boolean outOfSight = true;
+                //get the background color of anything we cam on the spot, as well as everything's icon + height
+                for (CObj o : os) {
+                    boolean sees = mContext.isVisible(o, c);
 
-            if (mContext.isHighlightedRed(c)) {
-                b.setBackgroundColor(mContext.getResources().getColor(R.color.highlight_red));
-                isHighlighted = true;
-                needsColor = false;
-            } else if (mContext.isHighlightedGreen(c)) {
-                b.setBackgroundColor(mContext.getResources().getColor(R.color.highlight_green));
-                isHighlighted = true;
-                needsColor = false;
-            } else if (mContext.isHighlighted(c)) {
-                b.setBackgroundColor(mContext.getResources().getColor(R.color.full_white));
-                isHighlighted = true;
-                needsColor = false;
-            }
-
-            for (CObj o : os) {
-                boolean sees = mContext.isVisible(o, c);
-
-                if (sees) {
-                    outOfSight = false;
-                    if (!mContext.isFiltered(o, c)) {
-                        textList.add(new StringInt(mContext.getIcon(o, c), o.getHeight() + o.getZ(c.x, c.y)));
-                        if (!isHighlighted) {
+                    if (sees) {
+                        outOfSight = false;
+                        if (!mContext.isFiltered(o, c)) {
+                            textList.add(new StringInt(mContext.getIcon(o, c), o.getHeight() + o.getZ(c.x, c.y)));
                             int color = mContext.getColor(o);
                             if (color != -1) {
-                                b.setBackground(mContext.getResources().getDrawable(color));
+                                coordHold.defaultBackground = color;
                                 needsColor = false;
                             }
                         }
                     }
                 }
-            }
-            if (needsColor) {
-                if (outOfSight)
-                    b.setBackground(mContext.getResources().getDrawable(R.drawable.fog_of_war)); //android.R.drawable.btn_default
-                else
-                    b.setBackground(mContext.getResources().getDrawable(R.drawable.default_ground));
+                if (needsColor) {
+                    if (outOfSight)
+                        coordHold.defaultBackground = R.drawable.fog_of_war; //android.R.drawable.btn_default
+                    else
+                        coordHold.defaultBackground = R.drawable.default_ground;
 
+                }
+
+
+
+                //set the text on it based on the obj
+                Collections.sort(textList, new Comparator<StringInt>() {
+                    @Override
+                    public int compare(StringInt p1, StringInt p2) {
+                        return p2.i - p1.i; // Ascending
+                    }
+                });
+                String text = "";
+                for (StringInt SI : textList) {
+                    if (!text.contains(SI.toString())) {
+                        text = text.concat(SI.toString());
+                    }
+                }
+                b.setText(text);
+
+
+                //set up on click
+                b.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        mContext.mapClicked(c);
+                    }
+                });
+
+                //set its position
+                coordHold.isSet = i;
             }
 
 
-            Collections.sort(textList, new Comparator<StringInt>() {
-                @Override
-                public int compare(StringInt p1, StringInt p2) {
-                    return p2.i - p1.i; // Ascending
-                }
-            });
-            String text = "";
-            for (StringInt SI : textList) {
-                if (!text.contains(SI.toString())) {
-                    text = text.concat(SI.toString());
-                }
+            //now  we set the background
+            if (mContext.isHighlightedRed(c)) {
+                b.setBackgroundColor(mContext.getResources().getColor(R.color.highlight_red));
+            } else if (mContext.isHighlightedGreen(c)) {
+                b.setBackgroundColor(mContext.getResources().getColor(R.color.highlight_green));
+            } else if (mContext.isHighlighted(c)) {
+                b.setBackgroundColor(mContext.getResources().getColor(R.color.full_white));
             }
-            b.setText(text);
-            b.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    mContext.mapClicked(c);
-                }
-            });
+            else{
+                b.setBackground(mContext.getResources().getDrawable(coordHold.defaultBackground));
+            }
+
         }
 
 
