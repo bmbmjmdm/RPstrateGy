@@ -20,6 +20,9 @@ import Utilities.Callable;
 import Utilities.ClimbObj;
 import Utilities.CoordInt;
 import Utilities.Direction;
+import Utilities.NameObjCallable;
+import Utilities.ObjCallable;
+import Utilities.RandomSelect;
 import Utilities.RemovedException;
 import Utilities.Stat;
 import database.Actions.ActionSteps.ActionStep;
@@ -31,12 +34,10 @@ import database.Actions.SubActions.SubAction;
 import database.Coord;
 import database.ObjT.Moving;
 import database.ObjT.ObjT;
-import database.ObjT.RemoveType;
 import database.Objs.CObjs.CObj;
+import database.Objs.Obj;
 import database.Objs.PObjs.User;
-import database.Objs.PObjs.Wolf;
 import database.Requirements.Requirement;
-import database.Requirements.andReq;
 import database.Requirements.bodypartReq;
 import database.Requirements.inAirReq;
 import database.Requirements.statCost;
@@ -46,6 +47,7 @@ import Managers.Logic.LogicCalc;
 import shenronproductions.app1.R;
 import shenronproductions.app1.Activities.gameAct;
 import Managers.timeKeeper;
+import shenronproductions.app1.gameUtils.viewGrid;
 
 /**
  * Created by Dale on 1/1/2015.
@@ -57,13 +59,15 @@ public class Run extends Action{
 
     ArrayList<Requirement> stepReq = new ArrayList<>();
 
-    int curSelected =  -404;
     public boolean firstStep = true;
 
     Direction dir = null;
-    Coord curC;
 
     bodypartReq legReq;
+
+    Coord userC = null;
+    Coord curC = null;
+
 
     public Run(){
         super("Run",
@@ -183,11 +187,11 @@ public class Run extends Action{
             User u = (User) gm.getState().getObjID(gm.getTimeline().turnObjectID);
             final gameAct context = gm.getGameAct();
             context.actionTakesMapClick = true;
-            curSelected =  -404;
+            zoomedIn = false;
             ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
             ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LogicCalc lc = new LogicCalc();
-            curC = u.getMiddlemostCoord();
+            userC = u.getMiddlemostCoord();
 
 
             //get all coord/cobj the user can run to
@@ -203,7 +207,7 @@ public class Run extends Action{
                 Iterator<Coord> iterator = canMoveToForward.keySet().iterator();
                 while(iterator.hasNext()){
                     Coord to = iterator.next();
-                    Direction d = Direction.findDir(curC, to);
+                    Direction d = Direction.findDir(userC, to);
                     if(Direction.degreesDifference(dir, d) > 1){
                         canMoveToBackward.put(to, canMoveToForward.get(to));
                         iterator.remove();
@@ -231,7 +235,7 @@ public class Run extends Action{
         GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
 
-        if(curSelected ==  -404) {
+        if(!zoomedIn) {
             HashSet<ClimbObj> applicants = canMoveToForward.get(c);
             if(applicants == null)
                 applicants = canMoveToBackward.get(c);
@@ -243,7 +247,8 @@ public class Run extends Action{
                 if (applicants.size() > 1) {
                     //more than one option, create a list of options
                     ((TextView) context.findViewById(R.id.actInInfo)).setText("There is more than one thing you can run onto on this space; please select one.");
-                    makeOptions(applicants, c, context);
+                    curC = c;
+                    setupGrid();
                 }
                 else {
                     //there is only one object the user can step on, automatically use it and move onto the next
@@ -313,7 +318,7 @@ public class Run extends Action{
         timeKeeper tk = gm.getTimeline();
 
         //prepare to move
-        dir = Direction.findDir(curC, c);
+        dir = Direction.findDir(userC, c);
 
         int realTime = getTimeNeeded(maxTimeNeeded, true);
         //if its not the first step, divide realTime by 3
@@ -440,90 +445,71 @@ public class Run extends Action{
 
     /******************************************************************************************************* UI MENUS BUTTONS ***********************************************/
 
-    private void makeOptions(HashSet<ClimbObj> applicants, final Coord c, final gameAct context){
-        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
-        LinearLayout twoLists = new LinearLayout(context);
-        twoLists.setOrientation(LinearLayout.HORIZONTAL);
-        twoLists.setWeightSum(2);
-        LinearLayout.LayoutParams twoListsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).addView(twoLists, twoListsParams);
 
-        LinearLayout optionsList = new LinearLayout(context);
-        optionsList.setOrientation(LinearLayout.VERTICAL);
-        final LinearLayout detailsList = new LinearLayout(context);
-        detailsList.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        listParams.weight = 1;
-        twoLists.addView(optionsList, listParams);
-        twoLists.addView(detailsList, listParams);
-        final int black = context.getResources().getColor(R.color.full_black);
-        final int white = context.getResources().getColor(R.color.full_white);
-        boolean first = true;
 
-        for(final ClimbObj co: applicants){
-            final TextView element = context.getElement(co.co.name, gameAct.ElementT.NORMAL);
-            element.setId(View.generateViewId());
-            if(first) {
-                element.setPadding(0, 0, 0, 0);
-                first = false;
-            }
-            element.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (curSelected == element.getId()) {
-                        element.setTextColor(black);
-                        curSelected =  -404;
-                        detailsList.removeAllViews();
-                        context.actionHighlightCoordsWhite(canMoveToForward.keySet());
-                        context.actionHighlightCoordsRed(canMoveToBackward.keySet());
-                    } else {
-                        element.setTextColor(white);
-                        if (curSelected !=  -404)
-                            ((TextView) context.findViewById(curSelected)).setTextColor(black);
-                        curSelected = element.getId();
-                        makeDetails(co, detailsList, c, context);
-                        context.actionHighlightCoordsWhite(context.getHighlightableCoords(co.co));
-                    }
 
-                }
-            });
 
-            optionsList.addView(element);
-        }
+
+    @Override
+    public void defaultHighlight(){
+        gameAct context = GameManager.getInstance().getGameAct();
+        context.actionHighlightCoordsWhite(canMoveToForward.keySet());
+        context.actionHighlightCoordsRed(canMoveToBackward.keySet());
     }
 
-    private void makeDetails(final ClimbObj co, LinearLayout detailsList, final Coord c, final gameAct context){
-        final int sp10 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, context.getResources().getDisplayMetrics());
-        final int dp8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics());
-        final Typeface font = Typeface.createFromAsset(context.getAssets(), "njnaruto.ttf");
-        detailsList.removeAllViews();
+    @Override
+    public void setupGrid(){
+        zoomedIn = false;
 
-        Button use = new Button(context);
-        use.setTypeface(font);
-        use.setText("Run On");
-        use.setTextColor(context.getResources().getColorStateList(R.color.white_text_button));
-        use.setBackground(context.getResources().getDrawable(R.drawable.brush2_button));
-        LinearLayout.LayoutParams useParams = new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, context.getResources().getDisplayMetrics()),
-                                                                            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, context.getResources().getDisplayMetrics()));
-        useParams.gravity = Gravity.CENTER_HORIZONTAL;
-        use.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upOrDown(co, c);
-            }
-        });
+        //extract all obj on the spot we are interested in using
+        HashSet<ClimbObj> tempApplicants = canMoveToForward.get(curC);
+        if(tempApplicants == null)
+            tempApplicants = canMoveToBackward.get(curC);
 
-        detailsList.addView(use, useParams);
+        final HashSet<ClimbObj> applicants = tempApplicants;
 
-
-        ArrayList<String> types = co.co.getDescription();
-        for(String s: types){
-            final TextView tV = new TextView(context);
-            tV.setText(Html.fromHtml(s));
-            tV.setTypeface(font);
-            tV.setTextSize(sp10);
-            tV.setPadding(0, dp8, 0, 0);
-            detailsList.addView(tV);
+        HashSet<CObj> useThese = new HashSet<CObj>();
+        for(ClimbObj co: applicants){
+            useThese.add(co.co);
         }
+
+        //set up onclick event to use an observed/selected obj
+        String butName = "Run On";
+        ObjCallable butClick = new ObjCallable() {
+            @Override
+            public void call(Obj o) {
+                ClimbObj useMe = null;
+
+                //if a parent is returned to this, pick one of its usable children at random
+                if(o.isParent()){
+                    HashSet<ClimbObj> allChildren = new HashSet<>();
+                    for(ClimbObj co: applicants){
+                        if(o.contains(co.co)){
+                            allChildren.add(co);
+                        }
+                    }
+
+                    useMe = new RandomSelect<ClimbObj>().getRandom(allChildren);
+                }
+
+                //if its a child, just use it
+                else{
+                    for(ClimbObj co: applicants){
+                        if(co.co == o){
+                            useMe = co;
+                            break;
+                        }
+                    }
+                }
+
+                //now make the call
+                upOrDown(useMe, curC);
+            }
+        };
+        NameObjCallable button = new NameObjCallable(butName, butClick);
+
+        //create grid
+        viewGrid newGrid = new viewGrid(useThese, curC, false, true);
+        newGrid.addToView(button);
     }
 }

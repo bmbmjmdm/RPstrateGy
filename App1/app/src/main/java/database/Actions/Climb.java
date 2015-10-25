@@ -21,6 +21,9 @@ import Managers.Logic.LogicCalc;
 import Managers.timeKeeper;
 import Utilities.ClimbObj;
 import Utilities.CoordInt;
+import Utilities.NameObjCallable;
+import Utilities.ObjCallable;
+import Utilities.RandomSelect;
 import Utilities.RemovedException;
 import Utilities.Stat;
 import database.Actions.ActionSteps.ActionStep;
@@ -34,6 +37,7 @@ import database.ObjT.Moving;
 import database.ObjT.ObjT;
 import database.ObjT.RemoveType;
 import database.Objs.CObjs.CObj;
+import database.Objs.Obj;
 import database.Objs.PObjs.User;
 import database.Requirements.Requirement;
 import database.Requirements.andReq;
@@ -43,6 +47,7 @@ import database.Requirements.statCost;
 import database.State;
 import shenronproductions.app1.R;
 import shenronproductions.app1.Activities.gameAct;
+import shenronproductions.app1.gameUtils.viewGrid;
 
 /**
  * Created by Dale on 1/1/2015.
@@ -52,8 +57,7 @@ public class Climb extends Action{
     public int zMovementUp = defaultZMovement;
     public int zMovementDown = defaultZMovement;
     HashMap<Coord, HashSet<ClimbObj>> canMoveTo;
-
-    int curSelected =  -404;
+    Coord curC = null;
 
     ArrayList<Requirement> climbReq = new ArrayList<>();
 
@@ -139,9 +143,9 @@ public class Climb extends Action{
     public void useAction(){
         GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
-        curSelected = -404;
         ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
         canMoveTo = new HashMap<>();
+        zoomedIn = false;
 
         ((TextView) context.findViewById(R.id.actInInfo)).setText("Do you want to climb up or down?");
         LinearLayout options = ((LinearLayout) context.findViewById(R.id.actInOptions));
@@ -190,7 +194,7 @@ public class Climb extends Action{
         GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
 
-        if(curSelected == -404) {
+        if(!zoomedIn) {
             HashSet<ClimbObj> applicants = canMoveTo.get(c);
             //is the coordinate ok to move onto?
             if (applicants != null) {
@@ -199,7 +203,8 @@ public class Climb extends Action{
                 if (applicants.size() > 1) {
                     //more than one option, create a list of options
                     ((TextView) context.findViewById(R.id.actInInfo)).setText("There is more than one thing you can climb onto on this space; please select one.");
-                    makeOptions(applicants, c, context);
+                    curC = c;
+                    setupGrid();
                 }
                 else {
                     ClimbObj onThis = applicants.iterator().next();
@@ -320,88 +325,61 @@ public class Climb extends Action{
 
 
 
-    private void makeOptions(HashSet<ClimbObj> applicants, final Coord c, final gameAct context){
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
-        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
-        LinearLayout twoLists = new LinearLayout(context);
-        twoLists.setOrientation(LinearLayout.HORIZONTAL);
-        twoLists.setWeightSum(2);
-        LinearLayout.LayoutParams twoListsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).addView(twoLists, twoListsParams);
+    @Override
+    public void defaultHighlight(){
+        GameManager.getInstance().getGameAct().actionHighlightCoordsWhite(canMoveTo.keySet());
+    }
 
-        LinearLayout optionsList = new LinearLayout(context);
-        optionsList.setOrientation(LinearLayout.VERTICAL);
-        final LinearLayout detailsList = new LinearLayout(context);
-        detailsList.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        listParams.weight = 1;
-        twoLists.addView(optionsList, listParams);
-        twoLists.addView(detailsList, listParams);
-        final int black = context.getResources().getColor(R.color.full_black);
-        final int white = context.getResources().getColor(R.color.full_white);
-        boolean first = true;
+    @Override
+    public void setupGrid(){
+        zoomedIn = false;
 
-        for(final ClimbObj co: applicants){
-            final TextView element = context.getElement(co.co.name, gameAct.ElementT.NORMAL);
-            if(first) {
-                element.setPadding(0, 0, 0, 0);
-                first = false;
-            }
-            element.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (curSelected == element.getId()) {
-                        element.setTextColor(black);
-                        curSelected =  -404;
-                        detailsList.removeAllViews();
-                        context.actionHighlightCoordsWhite(canMoveTo.keySet());
-                    } else {
-                        element.setTextColor(white);
-                        if (curSelected != -404)
-                            ((TextView) context.findViewById(curSelected)).setTextColor(black);
-                        curSelected = element.getId();
-                        makeDetails(co, detailsList, c, context);
-                        context.actionHighlightCoordsWhite(context.getHighlightableCoords(co.co));
+        //extract all obj on the spot we are interested in using
+        final HashSet<ClimbObj> applicants = canMoveTo.get(curC);
+        HashSet<CObj> useThese = new HashSet<CObj>();
+        for(ClimbObj co: applicants){
+            useThese.add(co.co);
+        }
+
+        //set up onclick event to use an observed/selected obj
+        String butName = "Climb Onto";
+        ObjCallable butClick = new ObjCallable() {
+            @Override
+            public void call(Obj o) {
+                ClimbObj useMe = null;
+
+                //if a parent is returned to this, pick one of its usable children at random
+                if(o.isParent()){
+                    HashSet<ClimbObj> allChildren = new HashSet<>();
+                    for(ClimbObj co: applicants){
+                        if(o.contains(co.co)){
+                            allChildren.add(co);
+                        }
                     }
 
+                    useMe = new RandomSelect<ClimbObj>().getRandom(allChildren);
                 }
-            });
 
-            optionsList.addView(element);
-        }
-    }
+                //if its a child, just use it
+                else{
+                    for(ClimbObj co: applicants){
+                        if(co.co == o){
+                            useMe = co;
+                            break;
+                        }
+                    }
+                }
 
-    private void makeDetails(final ClimbObj co, LinearLayout detailsList, final Coord c, final gameAct context){
-        final int sp10 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, context.getResources().getDisplayMetrics());
-        final int dp8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics());
-        final Typeface font = Typeface.createFromAsset(context.getAssets(), "njnaruto.ttf");
-        detailsList.removeAllViews();
-
-        Button use = new Button(context);
-        use.setTypeface(font);
-        use.setText("Climb On");
-        use.setTextColor(context.getResources().getColorStateList(R.color.white_text_button));
-        use.setBackground(context.getResources().getDrawable(R.drawable.brush2_button));
-        LinearLayout.LayoutParams useParams = new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, context.getResources().getDisplayMetrics()),
-                                                                            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, context.getResources().getDisplayMetrics()));
-        useParams.gravity = Gravity.CENTER_HORIZONTAL;
-        use.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                climbTo(co.co, new Coord(c.x, c.y, co.climbPoints.get(0)));
+                //now make the call
+                climbTo(useMe.co, new Coord(curC.x, curC.y, useMe.climbPoints.get(0)));
             }
-        });
+        };
+        NameObjCallable button = new NameObjCallable(butName, butClick);
 
-        detailsList.addView(use, useParams);
-
-
-        ArrayList<String> types = co.co.getDescription();
-        for(String s: types){
-            final TextView tV = new TextView(context);
-            tV.setText(Html.fromHtml(s));
-            tV.setTypeface(font);
-            tV.setTextSize(sp10);
-            tV.setPadding(0, dp8, 0, 0);
-            detailsList.addView(tV);
-        }
+        //create grid
+        viewGrid newGrid = new viewGrid(useThese, curC, false, true);
+        newGrid.addToView(button);
     }
+
+
 }

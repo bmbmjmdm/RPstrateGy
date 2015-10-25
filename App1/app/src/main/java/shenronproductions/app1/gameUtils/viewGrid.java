@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -338,14 +340,27 @@ public class viewGrid {
         //the obj being passed to the buttons COULD BE a RELATIVE (parent or child) of one of the original obj passed to viewGrid during init
             //handle appropriately whenever making the callables for this
     public void addToView(NameObjCallable... buttons){
+        //first, hide the old view
+        final FrameLayout expandedImageView;
+        if(action){
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.actionsInZoomed);
+        }
+        else{
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.mapInfoZoomed);
+        }
+        expandedImageView.setVisibility(View.GONE);
+
+
+
+
         HorizontalScrollView masterView;
 
         //the master view is dependant on whether this is for map info or action input
         if(action) {
-            masterView = (HorizontalScrollView) gc.findViewById(R.id.mapInfoInnerScroll);
+            masterView = (HorizontalScrollView) gc.findViewById(R.id.actionsInInnerScroll);
         }
         else{
-            masterView = (HorizontalScrollView) gc.findViewById(R.id.actionsInInnerScroll);
+            masterView = (HorizontalScrollView) gc.findViewById(R.id.mapInfoInnerScroll);
         }
 
         masterView.removeAllViews();
@@ -580,6 +595,10 @@ public class viewGrid {
     AnimatorSet mCurrentAnimator = null;
 
     private void zoomInOnObj(final View thumbView, int imageId, final Obj o, NameObjCallable... buttons) {
+        if(action) {
+            gc.zoomAction(true);
+        }
+
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         if (mCurrentAnimator != null) {
@@ -696,8 +715,12 @@ public class viewGrid {
                 mCurrentAnimator = null;
 
                 //highlight observed obj's coords
-
-                gc.highlightCoords(gc.getHighlightableCoords(o));
+                if(action){
+                    gc.actionHighlightCoordsWhite(gc.getHighlightableCoords(o));
+                }
+                else {
+                    gc.highlightCoords(gc.getHighlightableCoords(o));
+                }
             }
 
             @Override
@@ -715,6 +738,10 @@ public class viewGrid {
         final Callable<Void> closeExpanded = new Callable<Void>() {
             @Override
             public Void call() {
+
+                if(action) {
+                    gc.zoomAction(false);
+                }
 
                 if (mCurrentAnimator != null) {
                     mCurrentAnimator.cancel();
@@ -744,7 +771,12 @@ public class viewGrid {
                         mCurrentAnimator = null;
 
                         //highlight default after onserved obj has finished zooming out
-                        gc.highlightCoords(gc.defaultHighlight);
+                        if(action) {
+                            gc.getActionDefaultHighlight();
+                        }
+                        else {
+                            gc.highlightCoords(gc.defaultHighlight);
+                        }
                     }
 
                     @Override
@@ -785,11 +817,15 @@ public class viewGrid {
     private void fillDetails(final Obj o, LinearLayout detailsGrid, NameObjCallable... buttons) {
         ArrayList<String> description = o.getDescription();
         int sp12 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, gc.getResources().getDisplayMetrics());
+        int sp18 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20, gc.getResources().getDisplayMetrics());
         int wrap = LinearLayout.LayoutParams.WRAP_CONTENT;
         int dp7 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 7, gc.getResources().getDisplayMetrics());
+        int dp14 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, gc.getResources().getDisplayMetrics());
         int dp30 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, gc.getResources().getDisplayMetrics());
         int dp50 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, gc.getResources().getDisplayMetrics());
         int dp300 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, gc.getResources().getDisplayMetrics());
+        int grey = gc.getResources().getColor(R.color.trans_grey);
+
         Typeface font = Typeface.createFromAsset(gc.getAssets(), "njnaruto.ttf");
         final HashMap<Integer, Boolean> showParent;
         final HashMap<Integer, Boolean> showSelf;
@@ -803,6 +839,24 @@ public class viewGrid {
         }
 
 
+        //this is the name of the object, centered on top
+        TextView nameView;
+        nameView = new TextView(gc);
+        SpannableString content = new SpannableString(o.name);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        nameView.setText(content);
+        nameView.setTypeface(font);
+        nameView.setTextSize(sp18);
+        nameView.setBackgroundColor(grey);
+        nameView.setTextColor(gc.getResources().getColor(R.color.focus_blue));
+        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(wrap, wrap);
+        nameParams.setMargins(0, 0, 0, dp14);
+        nameParams.gravity = Gravity.CENTER_HORIZONTAL;
+        nameView.setLayoutParams(nameParams);
+        detailsGrid.addView(nameView);
+
+
+        //now any buttons for the obj
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(dp300, dp50);
         buttonParams.gravity = Gravity.CENTER_HORIZONTAL;
         buttonParams.setMargins(0, 0, 0, dp7);
@@ -835,7 +889,7 @@ public class viewGrid {
                 Button breakUp = new Button(gc);
                 breakUp.setTypeface(font);
                 breakUp.setTextSize(sp12);
-                breakUp.setText("View As Parts");
+                breakUp.setText("         View As Parts");
                 breakUp.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
                 breakUp.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
                 breakUp.setOnClickListener(new View.OnClickListener() {
@@ -850,8 +904,14 @@ public class viewGrid {
                             //and make them insist on showing themselves
                             showSelf.put(co.id, true);
                         }
+
                         //refresh
-                        gc.updateInfo();
+                        if(action){
+                            gc.actionInputGridRefresh();
+                        }
+                        else {
+                            gc.updateInfo();
+                        }
 
                     }
                 });
@@ -864,7 +924,7 @@ public class viewGrid {
                     Button findAll = new Button(gc);
                     findAll.setTypeface(font);
                     findAll.setTextSize(sp12);
-                    findAll.setText("Find All Parts");
+                    findAll.setText("         Find All Parts");
                     findAll.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
                     findAll.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
                     findAll.setOnClickListener(new View.OnClickListener() {
@@ -896,7 +956,7 @@ public class viewGrid {
                 Button viewWhole = new Button(gc);
                 viewWhole.setTypeface(font);
                 viewWhole.setTextSize(sp12);
-                viewWhole.setText("View As Whole");
+                viewWhole.setText("         View As Whole");
                 viewWhole.setTextColor(gc.getResources().getColorStateList(R.color.white_text_button));
                 viewWhole.setBackground(gc.getResources().getDrawable(R.drawable.brush2_button));
                 viewWhole.setOnClickListener(new View.OnClickListener() {
@@ -912,7 +972,14 @@ public class viewGrid {
                             //and make them not insist on showing themselves by default either
                             showSelf.put(co.id, false);
                         }
-                        gc.updateInfo();
+
+                        //refresh
+                        if(action){
+                            gc.actionInputGridRefresh();
+                        }
+                        else {
+                            gc.updateInfo();
+                        }
 
                     }
                 });
@@ -934,7 +1001,7 @@ public class viewGrid {
             gridView.setText(Html.fromHtml(s));
             gridView.setTypeface(font);
             gridView.setTextSize(sp12);
-            gridView.setBackgroundColor(gc.getResources().getColor(R.color.trans_grey));
+            gridView.setBackgroundColor(grey);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(wrap, wrap);
             params.setMargins(0, 0, 0, marginSize);
             if (swap) {

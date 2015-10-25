@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -262,6 +263,8 @@ public class gameAct extends Activity {
 
 
     public void setUpGame(){
+        findViewById(R.id.actionsInZoomed).setVisibility(View.GONE);
+        findViewById(R.id.mapInfoZoomed).setVisibility(View.GONE);
 
         if(continueFalling)
             continueFall();
@@ -1075,7 +1078,6 @@ public class gameAct extends Activity {
 
     public void setObjects(Narration n){
         inPOBJ = false;
-        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(n);
         unHighlightCoords(curHighlighted);
         defaultHighlight.clear();
@@ -1095,7 +1097,6 @@ public class gameAct extends Activity {
 
     public void setObjects(Coord c){
         inPOBJ = false;
-        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(c);
         HashSet<Coord> coords = new HashSet<Coord>();
         coords.add(c);
@@ -1117,7 +1118,6 @@ public class gameAct extends Activity {
 
     public void setObjects(final Obj po){
         inPOBJ = true;
-        findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
         mapInfoHistory.push(po);
         HashSet<Coord> coords = getHighlightableCoords(po);
         highlightCoords(coords);
@@ -1757,7 +1757,7 @@ public class gameAct extends Activity {
         updateCoords(oldCoords, true);
     }
 
-    public void highlightCoords(HashSet<Coord> coords) {
+    public void highlightCoords(Set<Coord> coords) {
         unHighlightCoords(curHighlighted);
         curHighlighted.addAll(coords);
         updateCoords(coords, true);
@@ -2274,7 +2274,17 @@ public class gameAct extends Activity {
         showActView(true);
     }
 
+    public void actionInputGridRefresh(){
+        curAction.setupGrid();
+    }
 
+    public void getActionDefaultHighlight(){
+        curAction.defaultHighlight();
+    }
+
+    public void zoomAction(boolean zoom){
+        curAction.zoomedIn = zoom;
+    }
 
 
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 
 import Managers.UserProfile;
@@ -51,6 +52,7 @@ public abstract class Action implements Serializable {
     public ArrayList<ActionT> types = new ArrayList<ActionT>();
     public ArrayList<Requirement> requirements = new ArrayList<Requirement>();
     public ArrayList<StatelessRequirement> statelessRequirements = new ArrayList<StatelessRequirement>();
+    public boolean zoomedIn = false;
 
 
     //time in centiseconds
@@ -324,6 +326,16 @@ public abstract class Action implements Serializable {
     public abstract void useAction();
 
     public abstract void mapClicked(Coord c);
+
+
+    //TODO be sure that you override this for any action that uses the action input grid. it is used by buttons to "break apart" or "put back together" obj
+    public void setupGrid(){
+
+    }
+
+    //TODO overwrite this as well for grid usage
+    public void defaultHighlight(){
+    }
 
 
     public int getTimeNeeded(int maxTime, boolean decrease){

@@ -23,6 +23,9 @@ import Utilities.Callable;
 import Utilities.CoordInt;
 import Utilities.DamageType;
 import Utilities.IntObj;
+import Utilities.NameObjCallable;
+import Utilities.ObjCallable;
+import Utilities.RandomSelect;
 import Utilities.RemovedException;
 import Utilities.Stat;
 import database.Actions.ActionSteps.ActionStep;
@@ -40,6 +43,7 @@ import database.ObjT.bpStrike;
 import database.ObjT.TurnBP;
 import database.Objs.CObjs.BodyPart;
 import database.Objs.CObjs.CObj;
+import database.Objs.Obj;
 import database.Objs.PObjs.User;
 import database.Requirements.Requirement;
 import database.Requirements.bodypartReq;
@@ -47,6 +51,7 @@ import database.Requirements.statCost;
 import database.State;
 import shenronproductions.app1.Activities.gameAct;
 import shenronproductions.app1.R;
+import shenronproductions.app1.gameUtils.viewGrid;
 
 /**
  * Created by Dale on 1/1/2015.
@@ -55,7 +60,6 @@ public class Bite extends Action{
     int zRange = 35;
     HashMap<Coord, HashSet<CObj>> canHit;
 
-    int curSelected =  -404;
 
     int damage = 10;
 
@@ -63,6 +67,8 @@ public class Bite extends Action{
 
     ArrayList<Requirement> biteReq = new ArrayList<>();
     bodypartReq headReq;
+
+    Coord curC = null;
 
 
     public Bite(){
@@ -157,7 +163,7 @@ public class Bite extends Action{
             User u = (User) s.getObjID(gm.getTimeline().turnObjectID);
             final gameAct context = gm.getGameAct();
             context.actionTakesMapClick = true;
-            curSelected =  -404;
+            zoomedIn = false;
             ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
             ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
             LogicCalc lc = new LogicCalc();
@@ -211,7 +217,7 @@ public class Bite extends Action{
         GameManager gm = GameManager.getInstance();
         final gameAct context = gm.getGameAct();
 
-        if(curSelected ==  -404) {
+        if(!zoomedIn) {
             HashSet<CObj> applicants = canHit.get(c);
 
             //is the coordinate ok to punch at
@@ -219,7 +225,8 @@ public class Bite extends Action{
 
                 //create a list of options
                 ((TextView) context.findViewById(R.id.actInInfo)).setText("Select what you would like to bite");
-                makeOptions(applicants, c, context);
+                curC = c;
+                setupGrid();
 
             }
         }
@@ -492,92 +499,58 @@ public class Bite extends Action{
 
 
 
-    private void makeOptions(HashSet<CObj> applicants, final Coord c, final gameAct context){
-        ((HorizontalScrollView) context.findViewById(R.id.actionsInInnerScroll)).removeAllViews();
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).removeAllViews();
-        LinearLayout twoLists = new LinearLayout(context);
-        twoLists.setOrientation(LinearLayout.HORIZONTAL);
-        twoLists.setWeightSum(2);
-        LinearLayout.LayoutParams twoListsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        ((LinearLayout) context.findViewById(R.id.actInOptions)).addView(twoLists, twoListsParams);
-
-        LinearLayout optionsList = new LinearLayout(context);
-        optionsList.setOrientation(LinearLayout.VERTICAL);
-        final LinearLayout detailsList = new LinearLayout(context);
-        detailsList.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        listParams.weight = 1;
-        twoLists.addView(optionsList, listParams);
-        twoLists.addView(detailsList, listParams);
-        final int black = context.getResources().getColor(R.color.full_black);
-        final int white = context.getResources().getColor(R.color.full_white);
-        boolean first = true;
 
 
-        for(final CObj co: applicants){
-            final TextView element = context.getElement(co.name, gameAct.ElementT.NORMAL);
-            element.setId(View.generateViewId());
-            if(first) {
-                element.setPadding(0, 0, 0, 0);
-                first = false;
-            }
-            element.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-
-                    if (curSelected == element.getId()) {
-                        element.setTextColor(black);
-                        curSelected = -404;
-                        detailsList.removeAllViews();
-                        context.actionHighlightCoordsWhite(canHit.keySet());
-                    } else {
-                        element.setTextColor(white);
-                        if (curSelected != -404)
-                            ((TextView) context.findViewById(curSelected)).setTextColor(black);
-                        curSelected = element.getId();
-                        makeDetails(co, detailsList, c, context);
-                        context.actionHighlightCoordsWhite(context.getHighlightableCoords(co));
-                    }
-
-                }
-            });
-
-            optionsList.addView(element);
-        }
+    @Override
+    public void defaultHighlight(){
+        GameManager.getInstance().getGameAct().actionHighlightCoordsWhite(canHit.keySet());
     }
 
-    private void makeDetails(final CObj co, LinearLayout detailsList, final Coord c, final gameAct context){
-        final int sp10 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, context.getResources().getDisplayMetrics());
-        final int dp8 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics());
-        final Typeface font = Typeface.createFromAsset(context.getAssets(), "njnaruto.ttf");
-        detailsList.removeAllViews();
+    @Override
+    public void setupGrid(){
+        zoomedIn = false;
 
-        Button use = new Button(context);
-        use.setTypeface(font);
-        use.setText("Bite");
-        use.setTextColor(context.getResources().getColorStateList(R.color.white_text_button));
-        use.setBackground(context.getResources().getDrawable(R.drawable.brush2_button));
-        LinearLayout.LayoutParams useParams = new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, context.getResources().getDisplayMetrics()),
-                                                                            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, context.getResources().getDisplayMetrics()));
-        useParams.gravity = Gravity.CENTER_HORIZONTAL;
-        use.setOnClickListener(new View.OnClickListener() {
+        //extract all obj on the spot we are interested in using
+        final HashSet<CObj> useThese = canHit.get(curC);
+
+        //set up onclick event to use an observed/selected obj
+        String butName = "Bite";
+        ObjCallable butClick = new ObjCallable() {
             @Override
-            public void onClick(View v) {
+            public void call(Obj o) {
+                CObj useMe = null;
+
+                //if a parent is returned to this, pick one of its usable children at random
+                if(o.isParent()){
+                    HashSet<CObj> allChildren = new HashSet<>();
+                    for(CObj co: useThese){
+                        if(o.contains(co)){
+                            allChildren.add(co);
+                        }
+                    }
+
+                    useMe = new RandomSelect<CObj>().getRandom(allChildren);
+                }
+
+                //if its a child, just use it
+                else{
+                    for(CObj co: useThese){
+                        if(co == o){
+                            useMe = co;
+                            break;
+                        }
+                    }
+                }
+
+                //now make the call
                 LogicCalc lc = new LogicCalc();
-                hit(co, new Coord(c.x, c.y, lc.getAccCenter(co, new Coord(c.x, c.y, torso.z), zRange)));
+                hit(useMe, new Coord(curC.x, curC.y, lc.getAccCenter(useMe, new Coord(curC.x, curC.y, torso.z), zRange)));
             }
-        });
+        };
+        NameObjCallable button = new NameObjCallable(butName, butClick);
 
-        detailsList.addView(use, useParams);
-
-
-        ArrayList<String> types = co.getDescription();
-        for(String s: types){
-            final TextView tV = new TextView(context);
-            tV.setText(Html.fromHtml(s));
-            tV.setTypeface(font);
-            tV.setTextSize(sp10);
-            tV.setPadding(0, dp8, 0, 0);
-            detailsList.addView(tV);
-        }
+        //create grid
+        viewGrid newGrid = new viewGrid(useThese, curC, false, true);
+        newGrid.addToView(button);
     }
 }
