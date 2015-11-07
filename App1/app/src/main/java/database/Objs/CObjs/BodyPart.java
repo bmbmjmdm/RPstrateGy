@@ -70,7 +70,7 @@ public class BodyPart extends CObj {
                     }
 
                     if (allThere)
-                        return "Player";
+                        return parent.name;
                     break;
                 }
             }

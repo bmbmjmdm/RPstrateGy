@@ -213,6 +213,17 @@
                         android:padding="5dp"
                         android:visibility="gone">
 
+                        <Button
+                            android:layout_width="300dp"
+                            android:layout_height="45dp"
+                            android:text="View   User"
+                            android:textSize="16sp"
+                            android:layout_gravity="center_horizontal"
+                            android:background="@drawable/brush2_button"
+                            android:textColor="@drawable/white_text_button"
+                            android:onClick="findCurUser"
+                            android:id="@+id/findCurUser"/>
+
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
@@ -379,12 +390,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="0dp"
-                            android:padding="5dp">
+                            android:padding="5dp"
+                            android:id="@+id/mapInfoZoomedScroll">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:id="@+id/mapInfoDetails">
+                                android:id="@+id/mapInfoDetails"
+                                android:alpha="0">
 
                             </LinearLayout>
 
@@ -422,9 +435,9 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Preset"
-                        android:id="@+id/presetFiltersBut"
-                        android:onClick="presetFilters"
+                        android:text="Custom"
+                        android:id="@+id/customFiltersBut"
+                        android:onClick="customFilters"
                         android:background="@drawable/hair_flipped_inverted"
                         android:textColor="@color/full_black"
                         android:textSize="19sp"
@@ -433,13 +446,14 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Custom"
-                        android:id="@+id/customFiltersBut"
-                        android:onClick="customFilters"
+                        android:text="Preset"
+                        android:id="@+id/presetFiltersBut"
+                        android:onClick="presetFilters"
                         android:background="@drawable/hair"
                         android:textColor="@color/full_white"
                         android:textSize="19sp"
                         android:layout_weight="1"/>
+
 
                 </LinearLayout>
 
@@ -453,7 +467,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/viewCustomFilters"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
@@ -464,7 +478,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/viewPresetFilters"
-                    android:visibility="visible">
+                    android:visibility="gone">
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
@@ -567,7 +581,9 @@
                                     android:layout_gravity="center_horizontal"
                                     android:background="@drawable/brush2_button"
                                     android:textColor="@drawable/white_text_button"
-                                    android:onClick="actionsReturn" />
+                                    android:onClick="actionsReturn"
+                                    android:layout_marginBottom="0dp"
+                                    android:paddingBottom="0dp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -577,7 +593,8 @@
                                     android:id="@+id/actInInfo"
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                    android:layout_marginTop="5dp"/>
+                                    android:layout_marginTop="5dp"
+                                    android:paddingTop="0dp"/>
 
                                 <LinearLayout
                                     android:orientation="vertical"
@@ -635,12 +652,14 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="0dp"
-                                    android:padding="5dp">
+                                    android:padding="5dp"
+                                    android:id="@+id/actionsZoomedScroll">
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:orientation="vertical"
-                                        android:id="@+id/actionsInDetails">
+                                        android:id="@+id/actionsInDetails"
+                                        android:alpha="0">
 
                                     </LinearLayout>
 

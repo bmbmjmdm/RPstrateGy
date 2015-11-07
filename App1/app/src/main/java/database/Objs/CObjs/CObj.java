@@ -30,6 +30,10 @@ public abstract class CObj extends Obj {
     private int weight;
 
 
+    //whether the image should show in the map by default or not
+    public boolean showByDefault = true;
+
+
     //unicode
     String image = "";
 

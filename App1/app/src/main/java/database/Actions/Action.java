@@ -328,6 +328,9 @@ public abstract class Action implements Serializable {
     public abstract void mapClicked(Coord c);
 
 
+
+    //TODO remember if you are using a grid to keep the description to a MINIMUM otherwise the grid will be super squished
+
     //TODO be sure that you override this for any action that uses the action input grid. it is used by buttons to "break apart" or "put back together" obj
     public void setupGrid(){
 

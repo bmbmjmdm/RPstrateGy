@@ -18,13 +18,14 @@ public class Rock extends CObj {
     //ROCK SHOULD NOT BE CREATED EXCEPT FOR START OF GAME. OTHERWISE THIS VIOLATES RANDOM CONTRACT
 
     public Rock(ArrayList<Coord> co, int own, int height, int width, int weight, int health){
-        super(co, own, height, Math.min(50, width), weight, health, height<40? "Small Rocks":"Large Rock");
+        super(co, own, height, Math.min(50, width), weight, health, height < 40 ? "Small Rocks" : "Large Rock");
         if(height<40) {
             image = " \u05C5\u032F ";
             if(height<15)
                 types.add(new doesntTakeUpSpace(id));
 
             types.add(new Stable(id, 70));
+            showByDefault = false;
         }
         else {
             image = "\u2229";

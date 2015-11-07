@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -477,7 +479,7 @@ public class viewGrid {
         container.setLayoutParams(layoutParams);
         container.setPadding(marginsHor, marginsVert, marginsHor, marginsVert);
         container.setImageDrawable(gc.getResources().getDrawable(image));
-        container.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        container.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
 
         //set up zoom in function
         container.setOnClickListener(new View.OnClickListener() {
@@ -595,6 +597,28 @@ public class viewGrid {
     AnimatorSet mCurrentAnimator = null;
 
     private void zoomInOnObj(final View thumbView, int imageId, final Obj o, NameObjCallable... buttons) {
+        //get the views we'll be using
+        final LinearLayout detailsGrid;
+        final FrameLayout expandedImageView;
+        final ImageButton imageInFrame;
+        final ScrollView zoomedInScroll;
+        if(action){
+            detailsGrid = (LinearLayout) gc.findViewById(R.id.actionsInDetails);
+            imageInFrame =  (ImageButton) gc.findViewById(R.id.actionsInPicture);
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.actionsInZoomed);
+            zoomedInScroll = (ScrollView) gc.findViewById(R.id.actionsZoomedScroll);
+        }
+        else{
+            detailsGrid = (LinearLayout) gc.findViewById(R.id.mapInfoDetails);
+            imageInFrame =  (ImageButton) gc.findViewById(R.id.mapInfoPicture);
+            expandedImageView = (FrameLayout) gc.findViewById(R.id.mapInfoZoomed);
+            zoomedInScroll = (ScrollView) gc.findViewById(R.id.mapInfoZoomedScroll);
+        }
+
+        // Add the details to the detail list/grid
+        detailsGrid.removeAllViews();
+        fillDetails(o, detailsGrid, buttons);
+
         if(action) {
             gc.zoomAction(true);
         }
@@ -606,36 +630,8 @@ public class viewGrid {
         }
 
         // Load the high-resolution "zoomed-in" image.
-        final ImageButton imageInFrame;
-        if(action){
-            imageInFrame =  (ImageButton) gc.findViewById(R.id.actionsInPicture);
-        }
-        else{
-            imageInFrame =  (ImageButton) gc.findViewById(R.id.mapInfoPicture);
-        }
-
         imageInFrame.setImageResource(imageId);
 
-        // Add the details to the detail list/grid
-        final LinearLayout detailsGrid;
-        if(action){
-            detailsGrid = (LinearLayout) gc.findViewById(R.id.actionsInDetails);
-        }
-        else{
-            detailsGrid = (LinearLayout) gc.findViewById(R.id.mapInfoDetails);
-        }
-
-        detailsGrid.removeAllViews();
-
-
-        //get the zoomed in frame as a whole and begin morphing
-        final FrameLayout expandedImageView;
-        if(action){
-            expandedImageView = (FrameLayout) gc.findViewById(R.id.actionsInZoomed);
-        }
-        else{
-            expandedImageView = (FrameLayout) gc.findViewById(R.id.mapInfoZoomed);
-        }
 
         // Calculate the starting and ending bounds for the zoomed-in image.
         // This step involves lots of math. Yay, math.
@@ -661,27 +657,29 @@ public class viewGrid {
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
 
+        // calculate the start scaling factor (the end scaling factor is always 1.0).
+        final float startScaleHeight = (float) startBounds.height() / finalBounds.height();
+        final float startScaleWidth = (float) startBounds.width() / finalBounds.width();
+
         // Adjust the start bounds to be the same aspect ratio as the final
         // bounds using the "center crop" technique. This prevents undesirable
-        // stretching during the animation. Also calculate the start scaling
-        // factor (the end scaling factor is always 1.0).
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
+        // stretching during the animation.
+       /* if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
             // Extend start bounds horizontally
-            startScale = (float) startBounds.height() / finalBounds.height();
+            float startScale = startScaleHeight;
             float startWidth = startScale * finalBounds.width();
             float deltaWidth = (startWidth - startBounds.width()) / 2;
             startBounds.left -= deltaWidth;
             startBounds.right += deltaWidth;
         } else {
             // Extend start bounds vertically
-            startScale = (float) startBounds.width() / finalBounds.width();
+            float startScale = startScaleWidth;
             float startHeight = startScale * finalBounds.height();
             float deltaHeight = (startHeight - startBounds.height()) / 2;
             startBounds.top -= deltaHeight;
             startBounds.bottom += deltaHeight;
-        }
+        }*/
 
         // Hide the thumbnail and show the zoomed-in view. When the animation
         // begins, it will position the zoomed-in view in the place of the
@@ -705,8 +703,11 @@ public class viewGrid {
                 .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
                         startBounds.top, finalBounds.top))
                 .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
-                        startScale, 1f)).with(ObjectAnimator.ofFloat(expandedImageView,
-                View.SCALE_Y, startScale, 1f));
+                        startScaleWidth, 1f))
+                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_Y,
+                        startScaleHeight, 1f))
+                .with(ObjectAnimator.ofFloat(detailsGrid, View.ALPHA,
+                        1f));
         set.setDuration(animationDuration);
         set.setInterpolator(new DecelerateInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
@@ -714,7 +715,6 @@ public class viewGrid {
             public void onAnimationEnd(Animator animation) {
                 mCurrentAnimator = null;
 
-                //highlight observed obj's coords
                 if(action){
                     gc.actionHighlightCoordsWhite(gc.getHighlightableCoords(o));
                 }
@@ -726,6 +726,13 @@ public class viewGrid {
             @Override
             public void onAnimationCancel(Animator animation) {
                 mCurrentAnimator = null;
+
+                if(action){
+                    gc.actionHighlightCoordsWhite(gc.getHighlightableCoords(o));
+                }
+                else {
+                    gc.highlightCoords(gc.getHighlightableCoords(o));
+                }
             }
         });
         set.start();
@@ -734,7 +741,6 @@ public class viewGrid {
         // Upon clicking the zoomed-in image, it should zoom back down
         // to the original bounds and show the thumbnail instead of
         // the expanded image.
-        final float startScaleFinal = startScale;
         final Callable<Void> closeExpanded = new Callable<Void>() {
             @Override
             public Void call() {
@@ -754,36 +760,60 @@ public class viewGrid {
                         .ofFloat(expandedImageView, View.X, startBounds.left))
                         .with(ObjectAnimator
                                 .ofFloat(expandedImageView,
-                                        View.Y,startBounds.top))
+                                        View.Y, startBounds.top))
                         .with(ObjectAnimator
                                 .ofFloat(expandedImageView,
-                                        View.SCALE_X, startScaleFinal))
+                                        View.SCALE_X, startScaleWidth))
                         .with(ObjectAnimator
                                 .ofFloat(expandedImageView,
-                                        View.SCALE_Y, startScaleFinal));
+                                        View.SCALE_Y, startScaleHeight))
+                        .with(ObjectAnimator
+                                .ofFloat(detailsGrid,
+                                        View.ALPHA, 0f));
                 set.setDuration(animationDuration);
-                set.setInterpolator(new DecelerateInterpolator());
+                //set.setInterpolator(new DecelerateInterpolator());
                 set.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
+                        detailsGrid.removeAllViews();
                         thumbView.setAlpha(1f);
                         expandedImageView.setVisibility(View.GONE);
                         mCurrentAnimator = null;
+                        zoomedInScroll.fullScroll(View.FOCUS_UP);
 
                         //highlight default after onserved obj has finished zooming out
-                        if(action) {
-                            gc.getActionDefaultHighlight();
-                        }
-                        else {
-                            gc.highlightCoords(gc.defaultHighlight);
-                        }
+                        gc.mainHandler.post(new Runnable(){
+                            public void run(){
+                                if(action) {
+                                    gc.getActionDefaultHighlight();
+                                }
+                                else {
+                                    gc.highlightCoords(gc.defaultHighlight);
+                                }
+                            }
+                        });
+
                     }
 
                     @Override
                     public void onAnimationCancel(Animator animation) {
+                        detailsGrid.removeAllViews();
                         thumbView.setAlpha(1f);
                         expandedImageView.setVisibility(View.GONE);
                         mCurrentAnimator = null;
+                        zoomedInScroll.fullScroll(View.FOCUS_UP);
+
+                        //highlight default after onserved obj has finished zooming out
+                        gc.mainHandler.post(new Runnable(){
+                            public void run(){
+                                if(action) {
+                                    gc.getActionDefaultHighlight();
+                                }
+                                else {
+                                    gc.highlightCoords(gc.defaultHighlight);
+                                }
+                            }
+                        });
                     }
                 });
 
@@ -808,7 +838,6 @@ public class viewGrid {
             }
         });
 
-        fillDetails(o, detailsGrid, buttons);
     }
 
 

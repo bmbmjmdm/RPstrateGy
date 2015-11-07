@@ -65,10 +65,10 @@ public class wolfPack extends Level {
         day = false;
 
         //set map size based on level difficulty
-        if(difficulty <= 0.4){
+        if(difficulty <= 0.8){
             size = "Small";
         }
-        else if (difficulty <= 2){
+        else if (difficulty <= 3){
             size = "Medium";
         }
         else{

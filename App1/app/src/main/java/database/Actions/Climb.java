@@ -226,6 +226,8 @@ public class Climb extends Action{
             LogicCalc lc = new LogicCalc();
             zMovementDown = defaultZMovement;
             zMovementUp = defaultZMovement;
+            LinearLayout options = ((LinearLayout) context.findViewById(R.id.actInOptions));
+            options.removeAllViews();
 
             //get all coord/cobj the user can run to
             if (up)

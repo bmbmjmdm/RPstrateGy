@@ -22,6 +22,9 @@ public class TreeBranch extends CObj{
         image = "\uFEB3";
         types.add(new Standable(id));
         types.add(new Hard(id, 0.75));
+
+
+        showByDefault = false;
     }
 
     @Override

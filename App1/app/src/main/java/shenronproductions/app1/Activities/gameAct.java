@@ -82,16 +82,20 @@ public class gameAct extends Activity {
     public HashSet<Coord> defaultHighlight = new HashSet<Coord>();
     public View curInfoView = null;
     public View curNarrateView = null;
+
     HashSet<String> filterThese = new HashSet<String>();
-    boolean customFilter = false;
+    HashSet<String> manualFiltered = new HashSet<String>();
+    HashSet<String> manualUnFiltered = new HashSet<>();
+    boolean customFilter = true;
     String presetFilter = "";
     ImageButton presetFilterSelected = null;
+    HashMap<Coord, HashSet<CObj>> canClimb = new HashMap<>();
+
     public Set<Coord> actionHighlightedWhite = new HashSet<>();
     public Set<Coord> actionHighlightedGreen = new HashSet<>();
     public Set<Coord> actionHighlightedRed = new HashSet<>();
 
     Action curAction = null;
-    HashMap<Coord, HashSet<CObj>> canClimb = new HashMap<>();
 
     RecyclerView gameMap;
 
@@ -236,6 +240,7 @@ public class gameAct extends Activity {
         ((Button) findViewById(R.id.narrateBut)).setTypeface(font);
         ((Button) findViewById(R.id.mapInfoBut)).setTypeface(font);
         ((Button) findViewById(R.id.actionsBut)).setTypeface(font);
+        ((Button) findViewById(R.id.findCurUser)).setTypeface(font);
         ((Button) findViewById(R.id.turnStatusBut)).setTypeface(font3);
         ((Button) findViewById(R.id.userStatusBut)).setTypeface(font3);
         ((Button) findViewById(R.id.historyBut)).setTypeface(font3);
@@ -337,16 +342,25 @@ public class gameAct extends Activity {
     public void newTurnPhase(boolean processPastTurn){
 
         findViewById(R.id.mapInfoZoomed).setVisibility(View.INVISIBLE);
+        ((ScrollView) findViewById(R.id.mapInfoZoomedScroll)).fullScroll(View.FOCUS_UP);
         showParent = new HashMap<>();
         showSelf = new HashMap<>();
         showParentPOBJ = new HashMap<>();
         showSelfPOBJ = new HashMap<>();
         inPOBJ = false;
 
+        filterThese = new HashSet<>();
+        manualFiltered = new HashSet<>();
+        manualUnFiltered = new HashSet<>();
+
+        updateCustomFilters();
         updatePresetFilters();
+        ((ScrollView) findViewById(R.id.viewCustomFilters)).fullScroll(View.FOCUS_UP);
+        ((ScrollView) findViewById(R.id.viewPresetFilters)).fullScroll(View.FOCUS_UP);
 
         //set the gamemap to view the new player
         centerView();
+        updateCoords();
 
 
         if(processPastTurn){
@@ -386,26 +400,43 @@ public class gameAct extends Activity {
         Iterator<Integer> canSeeIDS = curUser.getVisionKeySet().iterator();
         while(canSeeIDS.hasNext()){
             try {
+                //get each cobj the user can see
                 CObj co = (CObj) s.getObjID(canSeeIDS.next());
-                ArrayList<Coord> seeAt = getVision(co.id);
-                if (seeAt != null) {
-                    if (seeAt.size() > 0) {
-                        String text = co.getFilterText();
-                        String icon = co.getIcon();
-                        if (text != null)
-                            if (!alreadyDisplayed(icon)) {
+                String icon = co.getIcon();
+
+                //did we make a filter for this type of cobj already?
+                if (!alreadyDisplayed(icon)) {
+
+                    //can we see this cobj?
+                    ArrayList<Coord> seeAt = getVision(co.id);
+                    if (seeAt != null) {
+                        if (seeAt.size() > 0) {
+
+                            //does this cobj have a filter?
+                            String text = co.getFilterText();
+                            if (text != null) {
+
+                                //create filter and remember
                                 alreadyDisplayed.add(icon);
-                                custFilterOptions.addView(getCustomFilter(text, icon));
+                                custFilterOptions.addView(getCustomFilter(text, icon, co.showByDefault));
                             }
+                        }
                     }
                 }
             }
             catch(RemovedException e){}
         }
 
-        //also reset preset filters
-        canClimb = new HashMap<>();
 
+        //for all objects the user manually filtered, check to see if they exist on the map anymore. if they do not, remove them from the manual filter list
+        Iterator<String> filterIt = manualFiltered.iterator();
+        while(filterIt.hasNext()){
+            String usedToFilter = filterIt.next();
+            if(!alreadyDisplayed.contains(usedToFilter)){
+                filterIt.remove();
+                filterThese.remove(usedToFilter);
+            }
+        }
     }
 
     public void updatePresetFilters(){
@@ -419,6 +450,10 @@ public class gameAct extends Activity {
         }
         presetFilter = "";
         presetFilterSelected = null;
+
+
+        //also reset preset filters
+        canClimb = new HashMap<>();
     }
 
 
@@ -673,6 +708,12 @@ public class gameAct extends Activity {
     }
 
 
+    public void findCurUser(View v){
+        setObjects(curUser);
+        showMapInfo(v);
+    }
+
+
 
 
 
@@ -908,17 +949,17 @@ public class gameAct extends Activity {
         customFilter = true;
 
         Button customBut = (Button) findViewById(R.id.customFiltersBut);
-        customBut.setBackground(getResources().getDrawable(R.drawable.hair_inverted));
+        customBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped_inverted));
         customBut.setTextColor(getResources().getColor(R.color.full_black));
 
         Runnable callMe = new Runnable() {
             @Override
             public void run() {
                 Button customBut = (Button) findViewById(R.id.customFiltersBut);
-                customBut.setBackground(getResources().getDrawable(R.drawable.hair_inverted));
+                customBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped_inverted));
                 customBut.setTextColor(getResources().getColor(R.color.full_black));
                 Button presetBut = (Button) findViewById(R.id.presetFiltersBut);
-                presetBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped));
+                presetBut.setBackground(getResources().getDrawable(R.drawable.hair));
                 presetBut.setTextColor(getResources().getColor(R.color.full_white));
 
                 updateCoords();
@@ -934,17 +975,17 @@ public class gameAct extends Activity {
         customFilter = false;
 
         Button presetBut = (Button) findViewById(R.id.presetFiltersBut);
-        presetBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped_inverted));
+        presetBut.setBackground(getResources().getDrawable(R.drawable.hair_inverted));
         presetBut.setTextColor(getResources().getColor(R.color.full_black));
 
         Runnable callMe = new Runnable() {
             @Override
             public void run() {
                 Button presetBut = (Button) findViewById(R.id.presetFiltersBut);
-                presetBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped_inverted));
+                presetBut.setBackground(getResources().getDrawable(R.drawable.hair_inverted));
                 presetBut.setTextColor(getResources().getColor(R.color.full_black));
                 Button customBut = (Button) findViewById(R.id.customFiltersBut);
-                customBut.setBackground(getResources().getDrawable(R.drawable.hair));
+                customBut.setBackground(getResources().getDrawable(R.drawable.hair_flipped));
                 customBut.setTextColor(getResources().getColor(R.color.full_white));
 
                 updateCoords();
@@ -1908,7 +1949,14 @@ public class gameAct extends Activity {
 
     /*********************************************** Filter stuff *************************************************/
 
-    public LinearLayout getCustomFilter(final String text, final String icon){
+    public LinearLayout getCustomFilter(final String text, final String icon, boolean defaultShow){
+        if(manualFiltered.contains(icon)) {
+            defaultShow = false;
+        }
+        if (manualUnFiltered.contains(icon)) {
+            defaultShow = true;
+        }
+
         LinearLayout filter = new LinearLayout(this);
         LinearLayout.LayoutParams filterParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int dp10 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
@@ -1926,7 +1974,13 @@ public class gameAct extends Activity {
         final ImageButton select = new ImageButton(this);
         RelativeLayout.LayoutParams paramsIB = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         select.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        select.setImageResource(R.drawable.full_checkbox);
+        if(!defaultShow){
+            select.setImageResource(R.drawable.empty_checkbox);
+            filterThese.add(icon);
+        }
+        else {
+            select.setImageResource(R.drawable.full_checkbox);
+        }
         select.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         select.setClickable(false);
 
@@ -1960,11 +2014,15 @@ public class gameAct extends Activity {
                 if (filterThese.contains(icon)) {
                     select.setImageResource(R.drawable.full_checkbox);
                     filterThese.remove(icon);
+                    manualUnFiltered.add(icon);
+                    manualFiltered.remove(icon);
                     updateCoords();
                     updateInfo();
                 } else {
                     select.setImageResource(R.drawable.empty_checkbox);
                     filterThese.add(icon);
+                    manualUnFiltered.remove(icon);
+                    manualFiltered.add(icon);
                     updateCoords();
                     updateInfo();
                 }
@@ -2050,9 +2108,8 @@ public class gameAct extends Activity {
             if(icon == "")
                 return false;
 
-            for (String s : filterThese) {
-                if (s.compareTo(icon) == 0)
-                    return true;
+            if (filterThese.contains(icon)) {
+                return true;
             }
         }
 

@@ -19,6 +19,9 @@ public class Bush extends CObj {
         types.add(new Damage_Taken_Modifier(id, 0, 1.5, DamageType.fire, -1));
         types.add(new Damage_Taken_Modifier(id, 0, 1.5, DamageType.sharp, -1));
         types.add(new doesntTakeUpSpace(id));
+
+
+        showByDefault = false;
     }
 
 }
